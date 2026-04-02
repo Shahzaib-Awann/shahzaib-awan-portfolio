@@ -23,10 +23,10 @@ const navLinks = [
 
 const Header = () => {
   return (
-    <header className="h-25 border">
+    <header className="h-25 absolute top-0 z-50 w-full">
       <div className="container mx-auto h-full px-4 py-2">
         <div className="flex h-full items-center justify-between">
-          <h1 className="font-oswald text-2xl">Shahzaib Awan</h1>
+          <h1 className="font-poppins-600 capitalize text-2xl">SHAHZAIB AWAN</h1>
 
           <Sheet>
             <SheetTrigger asChild>
@@ -68,7 +68,7 @@ const Header = () => {
                   <Link
                     key={link.label}
                     href={link.href}
-                    className="text-3xl font-poppins-400 text-white hover:text-white/75 hover:translate-x-2 transition-all duration-300"
+                    className="text-2xl md:text-3xl font-poppins-400 text-white hover:text-white/75 hover:translate-x-2 transition-all duration-300"
                   >
                     {link.label}
                   </Link>
