@@ -102,6 +102,10 @@ export default function HeroSection() {
                 src="/assets/shahzaib-awan-portfolio-hero-image.png"
                 alt="profile"
                 fill
+                sizes="(max-width: 640px) 250px,
+                       (max-width: 768px) 300px,
+                       (max-width: 1024px) 350px,
+                       400px"
                 className="object-cover"
                 priority
               />
