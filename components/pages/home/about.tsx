@@ -56,7 +56,7 @@ const AboutSection = () => {
           <div className="w-full flex-1 flex flex-row items-start justify-center lg:justify-start">
             <Link
               href="#about"
-              className="text-white md:text-white/75 uppercase tracking-[0.15em] text-3xl pb-5 md:pb-0 md:text-6xl md:rotate-180 font-semibold md:[writing-mode:vertical-rl]"
+              className="text-white md:text-white/80 uppercase tracking-[0.15em] text-3xl sm:text-4xl pb-5 md:pb-0 md:text-6xl md:rotate-180 font-semibold md:[writing-mode:vertical-rl]"
             >
               About Me
             </Link>

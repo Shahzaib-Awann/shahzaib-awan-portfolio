@@ -14,7 +14,7 @@ const CurvedLoopText = "SHAHZAIB AWAN ✦ FULL STACK ✦ AI & ML ✦ DEVELOPER �
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
+    <section id="hero" className="relative min-h-screen flex items-center overflow-hidden">
       {/* ShapeGrid Background (VERY subtle) */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">
         <div
