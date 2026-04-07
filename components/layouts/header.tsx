@@ -12,6 +12,11 @@ import {
   SheetClose,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -22,8 +27,38 @@ const navLinks = [
 ];
 
 const Header = () => {
+
+  const headerRef = useRef(null);
+
+  useEffect(() => {
+    const header = headerRef.current;
+
+    ScrollTrigger.create({
+      start: "top -100",
+      onEnter: () => {
+        gsap.to(header, {
+          backgroundColor: "#f2f1f0",
+          boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+          duration: 0.3,
+        });
+      },
+      onLeaveBack: () => {
+        gsap.to(header, {
+          backgroundColor: "transparent",
+          boxShadow: "0 0 0 rgba(0,0,0,0)",
+          duration: 0.3,
+        });
+      },
+    });
+
+    return () => ScrollTrigger.killAll();
+  }, []);
+
   return (
-    <header className="h-25 absolute top-0 z-50 w-full">
+    <header
+      ref={headerRef}
+      className="h-25 fixed top-0 z-50 w-full transition-colors"
+    >
       <div className="container mx-auto h-full px-4 py-2">
         <div className="flex h-full items-center justify-between">
           <h1 className="font-poppins-600 capitalize text-2xl"><Link href="/#hero">SHAHZAIB AWAN</Link></h1>

@@ -84,3 +84,38 @@ export const testimonials = [
     stars: 4,
   },
 ];
+
+
+
+/**
+ * === Services Offered ===
+ *
+ * Represents a list of professional services provided.
+ *
+ * Each service object includes:
+ * - id (string) - Unique identifier for the service.
+ * - title (string) - Name of the service.
+ * - desc (string) - Brief description of the service, highlighting features and value.
+ */
+export const services = [
+  {
+      id: "01",
+      title: "Web App Development",
+      desc: "Building modern, scalable web applications with Next.js, focused on performance, reliability, and seamless user experience.",
+  },
+  {
+      id: "02",
+      title: "Mobile App Development",
+      desc: "Creating intuitive and high-performing mobile applications designed for smooth interaction and consistent user experience.",
+  },
+  {
+      id: "03",
+      title: "Desktop Software Solutions",
+      desc: "Developing efficient desktop applications tailored for speed, usability, and real-world productivity.",
+  },
+  {
+      id: "04",
+      title: "AI Systems & Automation",
+      desc: "Enhancing applications with intelligent capabilities that automate workflows and deliver smarter user interactions.",
+  },
+];

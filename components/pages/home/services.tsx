@@ -1,29 +1,6 @@
+import { services } from "@/lib/portfolio.constants";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-
-// Services data (kept separate for scalability and clarity)
-const services = [
-    {
-        id: "01",
-        title: "Web App Development",
-        desc: "Building modern, scalable web applications with Next.js, focused on performance, reliability, and seamless user experience.",
-    },
-    {
-        id: "02",
-        title: "Mobile App Development",
-        desc: "Creating intuitive and high-performing mobile applications designed for smooth interaction and consistent user experience.",
-    },
-    {
-        id: "03",
-        title: "Desktop Software Solutions",
-        desc: "Developing efficient desktop applications tailored for speed, usability, and real-world productivity.",
-    },
-    {
-        id: "04",
-        title: "AI Systems & Automation",
-        desc: "Enhancing applications with intelligent capabilities that automate workflows and deliver smarter user interactions.",
-    },
-];
 
 const ServicesSection = () => {
     return (
@@ -76,13 +53,10 @@ const ServicesSection = () => {
                     {services.map((service) => (
                         <div
                             key={service.id} // better key usage
-                            className="bg-background group border border-black/10 hover:border-black/40 rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-sm hover:-translate-y-1"
+                            className="bg-card hover:bg-card-hover group border border-black/10 hover:border-black/40 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-sm hover:-translate-y-1"
                         >
                             {/* Card content */}
-                            <div className="relative p-10 pb-15 h-full space-y-15 bg-white/25">
-
-                                {/* Hover overlay effect */}
-                                <div className="absolute inset-0 h-full bg-white/25 opacity-0 group-hover:opacity-100 transition duration-300" />
+                            <div className="relative p-10 pb-15 h-full space-y-15">
 
                                 {/* Top row (ID + icon) */}
                                 <div className="flex items-center justify-between">

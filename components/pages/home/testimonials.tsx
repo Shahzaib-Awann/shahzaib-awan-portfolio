@@ -50,10 +50,10 @@ const TestimonialsSection = () => {
           {testimonials.map((item, i) => (
             <div
               key={i}
-              className="group relative overflow-hidden rounded-2xl border border-black/10 bg-background transition-all duration-500 hover:border-black/40 hover:-translate-y-1 hover:shadow-md"
+              className="group relative overflow-hidden rounded-2xl border border-black/10 bg-card hover:bg-card-hover transition-all duration-500 hover:border-black/40 hover:-translate-y-1 hover:shadow-md"
             >
               {/* Content */}
-              <div className="relative p-10 flex flex-col justify-between h-full bg-white/25">
+              <div className="relative p-10 flex flex-col justify-between h-full">
                 {/* Top Row */}
                 <div className="flex items-start justify-end">
                   {/* Quote */}

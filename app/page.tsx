@@ -1,4 +1,5 @@
 
+import Footer from "@/components/layouts/footer";
 import Header from "@/components/layouts/header";
 import AboutSection from "@/components/pages/home/about";
 import ContactMeSection from "@/components/pages/home/contact-me";
@@ -17,6 +18,7 @@ export default function Home() {
       <ProjectsSection />
       <TestimonialsSection />
       <ContactMeSection />
+      <Footer />
     </div>
   );
 }
