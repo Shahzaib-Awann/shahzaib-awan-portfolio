@@ -25,7 +25,7 @@ const AboutSection = () => {
   const { isMobile } = useIsMobile();
 
   return (
-    <section id="about" className="relative min-h-screen flex flex-col items-center overflow-hidden bg-black py-20">
+    <section id="about" className="relative flex flex-col items-center overflow-hidden bg-black py-25">
 
       {/* Container for heading, logo loop, and about content */}
       <div className="container flex flex-col gap-10 px-5">

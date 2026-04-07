@@ -1,5 +1,3 @@
-"use client";
-
 import ProjectCards from "@/components/widgets/project-card";
 import { projects } from "@/lib/dummyData";
 import { ArrowUpRight } from "lucide-react";
@@ -9,7 +7,7 @@ const ProjectsSection = () => {
     return (
         <section
             id="projects"
-            className="relative min-h-screen flex flex-col items-center overflow-hidden bg-black py-20"
+            className="relative flex flex-col items-center overflow-hidden bg-black py-25"
         >
             {/* Main Section */}
             <div className="container flex flex-col gap-10 px-5">

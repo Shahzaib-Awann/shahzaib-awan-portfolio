@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Oswald, Poppins } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -29,7 +30,10 @@ export default function RootLayout({
       lang="en"
       className={`${poppins.variable} ${oswald.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <Toaster />
+        </body>
     </html>
   );
 }

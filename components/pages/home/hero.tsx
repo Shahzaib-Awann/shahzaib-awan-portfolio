@@ -1,5 +1,3 @@
-"use client";
-
 import CurvedLoop from "@/components/ui/curved-loop";
 import TextType from "@/components/ui/text-type-animation";
 import Image from "next/image";
@@ -79,7 +77,7 @@ export default function HeroSection() {
           {/* CTA */}
           <div className="flex items-center justify-center md:justify-start gap-6 pt-2 mb-10 sm:mb-0">
             <Link
-              href="#"
+              href="#contact-me"
               className="bg-black text-white hover:bg-background hover:text-black border hover:border-black px-10 py-5 text-sm rounded-none transition-all duration-300"
             >
               Get in touch

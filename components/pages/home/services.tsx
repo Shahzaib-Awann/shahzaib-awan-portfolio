@@ -1,5 +1,3 @@
-"use client";
-
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
@@ -31,7 +29,7 @@ const ServicesSection = () => {
     return (
         <section
             id="services"
-            className="relative min-h-screen py-20 bg-background overflow-hidden flex justify-center items-center"
+            className="relative py-25 bg-background overflow-hidden flex justify-center items-center"
         >
             {/* Background grid pattern */}
             <div className="absolute inset-0 opacity-5 pointer-events-none">
@@ -78,7 +76,7 @@ const ServicesSection = () => {
                     {services.map((service) => (
                         <div
                             key={service.id} // better key usage
-                            className="bg-background group border border-black/10 hover:border-black/40 rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-sm"
+                            className="bg-background group border border-black/10 hover:border-black/40 rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-sm hover:-translate-y-1"
                         >
                             {/* Card content */}
                             <div className="relative p-10 pb-15 h-full space-y-15 bg-white/25">
