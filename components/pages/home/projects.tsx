@@ -22,7 +22,7 @@ const ProjectsSection = () => {
                             Featured Projects
                         </Link>
 
-                        <p className="mt-4 text-lg lg:text-xl text-white/75">
+                        <p className="mt-4 text-lg lg:text-xl text-white/75 text-center md:text-left">
                             Ideas explored through design and code
                         </p>
                     </div>

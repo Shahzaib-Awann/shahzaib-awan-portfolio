@@ -1,22 +1,12 @@
-"use client";
-
-import { socialLinks } from "@/lib/portfolio.constants";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { BsGithub, BsLinkedin } from "react-icons/bs";
-
-const navLinks = [
-  { name: "About", href: "#about" },
-  { name: "Services", href: "#services" },
-  { name: "Projects", href: "#projects" },
-  { name: "Testimonials", href: "#testimonials" },
-  { name: "Contact", href: "#contact-me" },
-];
 
 const Footer = () => {
-  return (
-    <footer className="relative bg-background overflow-hidden">
+  const currentYear = new Date().getFullYear();
 
-      {/* Subtle grid (same as hero) */}
+  return (
+    <footer className="relative bg-background text-black overflow-hidden pt-25">
+      {/* Ultra subtle grid background */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">
         <div
           className="w-full h-full"
@@ -29,76 +19,65 @@ const Footer = () => {
       </div>
 
       {/* Main container */}
-      <div className="container mx-auto px-6 py-20 relative z-10 space-y-16">
+      <div className="relative z-10 container mx-auto px-6 py-15 flex flex-col gap-28">
+        {/* Top section */}
+        <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-20 items-end">
+          {/* Background word for decorative effect */}
+          <div className="absolute -top-20 left-0 -z-10 leading-none pointer-events-none select-none">
+            <h1 className="text-7xl sm:text-9xl lg:text-[210px] font-extrabold uppercase text-background">
+              CREATE
+            </h1>
+            <h1 className="absolute top-0 left-0 text-7xl sm:text-9xl lg:text-[210px] font-extrabold uppercase text-black/10">
+              CREATE
+            </h1>
+          </div>
 
-        {/* Top Section */}
-        <div className="grid md:grid-cols-3 gap-10 items-start">
+          {/* Left content - call to action */}
+          <div className="space-y-6 order-2 lg:order-1 text-center lg:text-left lg:pt-30 2xl:pt-0">
+            <p className="text-sm uppercase tracking-[0.3em] text-black/50">
+              Ready for your next project?
+            </p>
 
-          {/* Brand */}
-          <div className="space-y-4">
-            <h2 className="text-2xl font-semibold tracking-tight text-[#0a0a0a]">
-              Shahzaib Awan
+            <Link
+              href="mailto:shahzaibawan1357@gmail.com"
+              className="text-5xl md:text-7xl font-semibold leading-none tracking-tight"
+            >
+              Let&apos;s{" "}
+              <span className="text-black/75 italic">build together</span>
+            </Link>
+          </div>
+
+          {/* Right content - headline and project button */}
+          <div className="flex flex-col gap-8 lg:items-start md:col-span-1 order-1 lg:order-2">
+            <h2 className="text-3xl sm:text-5xl md:text-7xl font-semibold leading-none tracking-tight text-black/50 text-right">
+              <span className="block">Seamless</span>
+              <span className="block">Solutions.</span>
             </h2>
 
-            <p className="text-gray-600 leading-relaxed max-w-sm">
-              Full Stack Developer focused on building scalable, performant,
-              and production-ready applications with modern technologies.
-            </p>
-          </div>
-
-          {/* Navigation */}
-          <div className="flex flex-col gap-4 items-start md:items-center">
-            <h3 className="text-sm uppercase text-gray-500 tracking-wider">
-              Navigation
-            </h3>
-
-            <div className="flex flex-col gap-3">
-              {navLinks.map((link, i) => (
-                <Link
-                  key={i}
-                  href={link.href}
-                  className="text-[#0a0a0a] hover:translate-x-1 transition-all duration-300"
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Social */}
-          <div className="flex flex-col gap-4 items-start md:items-end">
-            <h3 className="text-sm uppercase text-gray-500 tracking-wider">
-              Connect
-            </h3>
-
-            <div className="flex gap-4">
-              {socialLinks.map((item, i) => {
-                const Icon = item.icon;
-
-                return (
-                  <Link
-                    key={i}
-                    href={item.href}
-                    target="_blank"
-                    className="p-3 border border-black/20 rounded hover:bg-black hover:text-white transition-all duration-300"
-                  >
-                    <Icon className="size-5" />
-                  </Link>
-                );
-              })}
-            </div>
+            <Link
+              href="/#contact-me"
+              className="bg-black rounded-none w-fit mx-auto lg:mr-0 group flex flex-row gap-2 text-white hover:bg-background hover:text-black border hover:border-black px-10 py-5 text-sm transition-all duration-300"
+            >
+              Start a Project
+              <ArrowUpRight className="size-5 transition-transform duration-500 group-hover:rotate-45 translate-x-1" />
+            </Link>
           </div>
         </div>
 
-        {/* Bottom Section */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-600">
+        {/* Bottom section - copyright and privacy */}
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-6 text-xs md:text-sm text-black/75">
+          <p>&copy; {currentYear} Shahzaib Awan. All rights reserved.</p>
 
-          <p>
-            © {new Date().getFullYear()} Shahzaib Awan. All rights reserved.
-          </p>
+          <p className="group relative inline-block">
+            <Link
+              href="/privacy-policy"
+              className="flex flex-row gap-1 items-center"
+            >
+              Privacy Policy
+            </Link>
 
-          <p className="flex items-center gap-1">
-            Built with precision & modern technologies
+            {/* Animated underline on hover */}
+            <span className="absolute left-0 -bottom-2 h-0.5 w-full bg-gray-600 transform scale-x-0 origin-center transition-transform duration-300 ease-out group-hover:scale-x-100"></span>
           </p>
         </div>
       </div>
