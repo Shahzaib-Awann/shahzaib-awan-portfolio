@@ -62,7 +62,7 @@ export function ContactMeForm() {
                       {...field}
                       type="text"
                       variant="simple"
-                      className="text-white border border-white/25 py-7 px-12"
+                      className="text-white text-base! border border-white/25 py-7 px-12"
                       placeholder="Your Name"
                       id="full-name-input-field"
                       aria-invalid={fieldState.invalid}
@@ -95,7 +95,7 @@ export function ContactMeForm() {
                       {...field}
                       type="email"
                       variant="simple"
-                      className="text-white border border-white/25 py-7 px-12"
+                      className="text-white text-base! border border-white/25 py-7 px-12"
                       placeholder="your@mail.com"
                       id="email-input-field"
                       autoComplete="off"
@@ -129,7 +129,7 @@ export function ContactMeForm() {
                     {...field}
                     type="text"
                     variant="simple"
-                    className="text-white border border-white/25 py-7 px-12"
+                    className="text-white text-base! border border-white/25 py-7 px-12"
                     placeholder="Write a subject"
                     id="subject-input-field"
                     autoComplete="off"

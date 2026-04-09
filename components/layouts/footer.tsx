@@ -1,22 +1,15 @@
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import { BackgroundPattern } from "../ui/background-pattern";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
     <footer className="relative bg-background text-black overflow-hidden pt-25">
-      {/* Ultra subtle grid background */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none">
-        <div
-          className="w-full h-full"
-          style={{
-            backgroundImage:
-              "linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)",
-            backgroundSize: "80px 80px",
-          }}
-        />
-      </div>
+      
+      {/* Grid Background Pattern */}
+      <BackgroundPattern />
 
       {/* Main container */}
       <div className="relative z-10 container mx-auto px-6 py-15 flex flex-col gap-28">

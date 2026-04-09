@@ -1,3 +1,4 @@
+import { BackgroundPattern } from "@/components/ui/background-pattern";
 import CurvedLoop from "@/components/ui/curved-loop";
 import TextType from "@/components/ui/text-type-animation";
 import Image from "next/image";
@@ -13,17 +14,9 @@ const CurvedLoopText = "SHAHZAIB AWAN ✦ FULL STACK ✦ AI & ML ✦ DEVELOPER �
 export default function HeroSection() {
   return (
     <section id="hero" className="relative min-h-screen flex items-center overflow-hidden">
-      {/* ShapeGrid Background (VERY subtle) */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none">
-        <div
-          className="w-full h-full"
-          style={{
-            backgroundImage:
-              "linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)",
-            backgroundSize: "80px 80px",
-          }}
-        />
-      </div>
+      
+      {/* Grid Background Pattern */}
+      <BackgroundPattern />
 
       {/* Curved Signature (BOTTOM ONLY) */}
       <div className="absolute top-0 md:top-120 xl:top-130 left-0 w-full justify-center opacity-20 pointer-events-none flex">

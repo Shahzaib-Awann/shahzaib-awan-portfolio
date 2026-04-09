@@ -1,3 +1,4 @@
+import { BackgroundPattern } from "@/components/ui/background-pattern";
 import { testimonials } from "@/lib/portfolio.constants";
 import { Star } from "lucide-react";
 import Link from "next/link";
@@ -8,17 +9,9 @@ const TestimonialsSection = () => {
       id="testimonials"
       className="relative scroll-mt-10 py-25 bg-background overflow-hidden flex justify-center items-center"
     >
-      {/* Background grid pattern */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none">
-        <div
-          className="w-full h-full"
-          style={{
-            backgroundImage:
-              "linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)",
-            backgroundSize: "80px 80px",
-          }}
-        />
-      </div>
+      
+      {/* Grid Background Pattern */}
+      <BackgroundPattern />
 
       {/* Main container */}
       <div className="container mx-auto px-6 relative z-10 space-y-20">
