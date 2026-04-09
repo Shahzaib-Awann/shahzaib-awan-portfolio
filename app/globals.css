@@ -47,7 +47,6 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 
   --font-sans: var(--font-poppins);
-  --font-heading: var(--font-oswald);
 }
 
 :root {
@@ -112,15 +111,6 @@
   .font-poppins-700 { font-family: var(--font-poppins); font-weight: 700; }
   .font-poppins-800 { font-family: var(--font-poppins); font-weight: 800; }
   .font-poppins-900 { font-family: var(--font-poppins); font-weight: 900; }
-
-  /* Oswald */
-  .font-oswald { font-family: var(--font-oswald); font-weight: 500; }
-  .font-oswald-200 { font-family: var(--font-oswald); font-weight: 200; }
-  .font-oswald-300 { font-family: var(--font-oswald); font-weight: 300; }
-  .font-oswald-400 { font-family: var(--font-oswald); font-weight: 400; }
-  .font-oswald-500 { font-family: var(--font-oswald); font-weight: 500; }
-  .font-oswald-600 { font-family: var(--font-oswald); font-weight: 600; }
-  .font-oswald-700 { font-family: var(--font-oswald); font-weight: 700; }
 }
 
 html {

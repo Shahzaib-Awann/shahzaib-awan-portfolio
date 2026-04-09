@@ -6,7 +6,7 @@ const ContactMeSection = () => {
   return (
     <section
       id="contact-me"
-      className="relative flex flex-col items-center overflow-hidden bg-black py-25"
+      className="relative flex flex-col scroll-mt-10 items-center overflow-hidden bg-black py-25"
     >
       {/* Main Section */}
       <div className="container flex flex-col gap-10 px-5">

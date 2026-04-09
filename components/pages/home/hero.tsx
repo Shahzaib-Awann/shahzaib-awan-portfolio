@@ -83,7 +83,7 @@ export default function HeroSection() {
               Get in touch
             </Link>
             <Link
-              href="#"
+              href="#projects"
               className="bg-transparent text-black hover:bg-black hover:text-white px-10 py-5 text-sm rounded-none transition-all duration-300"
             >
               Projects

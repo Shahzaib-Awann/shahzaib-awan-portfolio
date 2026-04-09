@@ -6,7 +6,7 @@ const ServicesSection = () => {
     return (
         <section
             id="services"
-            className="relative py-25 bg-background overflow-hidden flex justify-center items-center"
+            className="relative scroll-mt-10 py-25 bg-background overflow-hidden flex justify-center items-center"
         >
             {/* Background grid pattern */}
             <div className="absolute inset-0 opacity-5 pointer-events-none">
