@@ -14,6 +14,9 @@
 /coverage
 /jest-cache
 
+# other files
+/lib/dummyData.ts
+
 # next.js
 /.next/
 /out/
