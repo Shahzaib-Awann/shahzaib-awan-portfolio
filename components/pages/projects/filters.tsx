@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/select";
 import useDebounce from "@/lib/hooks/useDebounce";
 import { Cpu, Layers, Search, X } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 
@@ -23,15 +22,14 @@ type QueryState = {
   technology: string;
 };
 
-const ProjectsFilter = () => {
+const ProjectsFilter = ({ initialQuery }: { initialQuery: QueryState }) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   // Initial state from URL
   const [query, setQuery] = useState<QueryState>({
-    search: searchParams.get("search") || "",
-    category: searchParams.get("category") || "",
-    technology: searchParams.get("technology") || "",
+    search: initialQuery.search,
+    category: initialQuery.category,
+    technology: initialQuery.technology,
   });
 
   // Debounced values

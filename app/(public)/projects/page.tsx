@@ -1,8 +1,30 @@
 import ProjectsFilter from "@/components/pages/projects/filters";
+import ProjectsPagination from "@/components/pages/projects/paginations";
+import ProjectsShowcaseGrid from "@/components/pages/projects/showcase-grid";
 import { BackgroundPattern } from "@/components/ui/background-pattern";
 import Link from "next/link";
 
-const ProjectsPage = () => {
+type SearchParams = {
+  page?: string;
+  pageSize?: string;
+  search?: string;
+  category?: string;
+  technology?: string;
+};
+
+const ProjectsPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) => {
+  const params = await searchParams;
+
+  const search = params.search || "";
+  const category = params.category || "";
+  const technology = params.technology || "";
+  const page = Number(params.page || 1);
+  const pageSize = Number(params.pageSize || 20);
+
   return (
     <div
       id="projects"
@@ -30,12 +52,17 @@ const ProjectsPage = () => {
         </div>
 
         {/* Filter component */}
-        <ProjectsFilter />
+        <ProjectsFilter initialQuery={{ search, category, technology }} />
 
-        {/* Project grid */}
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* Project cards will be rendered here */}
-        </div>
+        <ProjectsShowcaseGrid />
+
+        <ProjectsPagination
+        currentPage={page}
+        totalPages={10} // from API
+        pageSize={pageSize}
+        totalItems={400} // from API
+      />
+        
       </div>
     </div>
   );
