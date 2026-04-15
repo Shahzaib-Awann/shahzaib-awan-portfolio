@@ -116,3 +116,32 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* * {
+  outline: 1px solid red;
+} */
+
+/* Scoped scrollbar only */
+.dark-scrollbar::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.dark-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Firefox support */
+.dark-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}

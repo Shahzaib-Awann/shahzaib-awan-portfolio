@@ -24,8 +24,8 @@ const ProjectsShowcaseGrid = () => {
   }, []);
 
   return (
-    <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-8 items-start">
-      {Array(10)
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 space-y-10 items-start">
+      {Array(1)
         .fill(null)
         .map((_, index) => {
           // Mock data (replace with real data later)

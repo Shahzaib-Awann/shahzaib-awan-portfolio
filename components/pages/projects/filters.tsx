@@ -54,7 +54,7 @@ const ProjectsFilter = ({ initialQuery }: { initialQuery: QueryState }) => {
   }, []);
 
   return (
-    <div className="bg-card shadow p-6 rounded-md flex flex-col md:flex-row gap-4 md:gap-6 items-center">
+    <div className="bg-card shadow p-6 rounded-md flex flex-col md:flex-row gap-4 md:gap-6 items-center ">
       {/* Search Input */}
       <div className="relative flex-1 w-full">
         <Input
@@ -62,7 +62,7 @@ const ProjectsFilter = ({ initialQuery }: { initialQuery: QueryState }) => {
           variant="simple"
           value={query.search}
           onChange={(e) => setQuery({ ...query, search: e.target.value })}
-          className="text-black text-base! border border-black/25 py-7 pl-12 pr-12 lg:pr-7 w-full"
+          className="text-black text-base! border border-black/25 py-6 sm:py-7 pl-12 pr-12 lg:pr-7 w-full"
           placeholder="Search Projects..."
           id="project-search-input"
           autoComplete="off"
@@ -82,20 +82,20 @@ const ProjectsFilter = ({ initialQuery }: { initialQuery: QueryState }) => {
       </div>
 
       {/* Filters: Category & Technology */}
-      <div className="w-full md:w-fit flex flex-row gap-6">
+      <div className="w-full md:w-fit flex flex-row gap-4 sm:gap-6">
         {/* Category Filter */}
         <div className="relative w-full md:w-fit">
-          <Layers className="absolute size-5 -translate-y-1/2 top-1/2 left-4 text-black/50" />
+          <Layers className="absolute size-5 -translate-y-1/2 top-1/2 left-4 text-black/50 hidden sm:block" />
           <Select
             value={query.category}
             onValueChange={(v) => setQuery({ ...query, category: v })}
           >
-            <SelectTrigger className="text-black text-base! border border-black/25 py-7 px-12 pr-7 w-full">
-              <SelectValue placeholder="All Categories" />
+            <SelectTrigger className="text-black text-xs! sm:text-base! border border-black/25 py-6 sm:py-7 px-4 sm:px-12 sm:pr-7 w-full overflow-hidden">
+              <SelectValue placeholder="All Categories" className="truncate" />
             </SelectTrigger>
             <SelectContent className="bg-card" position="popper">
               <SelectGroup>
-                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="all" >All Categories</SelectItem>
                 <SelectItem value="frontend">Frontend</SelectItem>
                 <SelectItem value="backend">Backend</SelectItem>
                 <SelectItem value="fullstack">Fullstack</SelectItem>
@@ -106,13 +106,13 @@ const ProjectsFilter = ({ initialQuery }: { initialQuery: QueryState }) => {
 
         {/* Technology Filter */}
         <div className="relative w-full md:w-fit">
-          <Cpu className="absolute size-5 -translate-y-1/2 top-1/2 left-4 text-black/50" />
+          <Cpu className="absolute size-5 -translate-y-1/2 top-1/2 left-4 text-black/50 hidden sm:block" />
           <Select
             value={query.technology}
             onValueChange={(v) => setQuery({ ...query, technology: v })}
           >
-            <SelectTrigger className="text-black text-base! border border-black/25 py-7 px-12 pr-7 w-full">
-              <SelectValue placeholder="All Technologies" />
+            <SelectTrigger className="text-black text-xs! max-w-[] sm:text-base! border border-black/25 py-6 sm:py-7 px-4 sm:px-12 sm:pr-7 w-full overflow-hidden">
+              <SelectValue placeholder="All Technologies" className="truncate"/>
             </SelectTrigger>
             <SelectContent className="bg-card" position="popper">
               <SelectGroup>
