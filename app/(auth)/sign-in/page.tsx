@@ -21,7 +21,7 @@ const SignInPage = () => {
         </Link>
 
         <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl">
-        You won’t always feel ready. Build anyway — readiness comes from repetition.
+        You won&apos;t always feel ready. Build anyway — readiness comes from repetition.
         </p>
 
         <SignInForm />
