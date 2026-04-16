@@ -33,3 +33,14 @@ export const contactMeFormSchema = z.object({
     .min(1, "Message is required")
     .max(1000, "Message must be less than 1000 characters"),
 });
+
+
+
+export const signInFormSchema = z.object({
+  email: z.email({ error: "Email is required" })
+    .min(1, "Email is required"),
+  password: z.string({ error: "Password is required" })
+    .min(1, "Password is required")
+    .min(6, "Password must be more than 6 characters")
+    .max(32, "Password must be less than 32 characters"),
+})
