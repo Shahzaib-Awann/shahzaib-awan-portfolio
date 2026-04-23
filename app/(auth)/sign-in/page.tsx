@@ -2,7 +2,15 @@ import SignInForm from "@/components/pages/sign-in/sign-in-form";
 import { BackgroundPattern } from "@/components/ui/background-pattern";
 import Link from "next/link";
 
-const SignInPage = () => {
+const SignInPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ callbackUrl?: string }>;
+}) => {
+
+  const params = await searchParams;
+  const callbackUrl = params.callbackUrl;
+
   return (
     <div
       id="sign-in"
@@ -24,7 +32,7 @@ const SignInPage = () => {
         You won&apos;t always feel ready. Build anyway — readiness comes from repetition.
         </p>
 
-        <SignInForm />
+        <SignInForm callbackUrl={callbackUrl} />
       </div>
     </div>
   );

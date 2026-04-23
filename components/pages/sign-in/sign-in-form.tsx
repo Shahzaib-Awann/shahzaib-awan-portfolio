@@ -12,7 +12,7 @@ import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import z from "zod";
 
-const SignInForm = () => {
+const SignInForm = ({ callbackUrl }: { callbackUrl?: string }) => {
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -36,17 +36,17 @@ const SignInForm = () => {
       const result = await signIn("credentials", {
         email: values.email,
         password: values.password,
-        redirect: false,
+        redirect: false
       });
-
+      
       // === Handle sign-in result ===
       if (result?.error) {
         toast.error("Invalid email or password");
         return;
       }
-      
+
       toast.success("Welcome back!");
-      window.location.href = "/admin";
+      window.location.href = callbackUrl || "/admin";
 
     } catch (e) {
       console.log("Error from sign-in page: ", e);

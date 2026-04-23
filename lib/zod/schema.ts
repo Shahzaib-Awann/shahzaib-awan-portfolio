@@ -1,6 +1,23 @@
-import z, { nullable } from 'zod';
+import z from 'zod';
 
 
+const imageSchema = z
+.union([
+  // Validate if the input is a File instance
+  z
+    .instanceof(File, { message: "Choose an image to upload" })
+    .refine((file) => file.size <= 1 * 1024 * 1024, {
+      message: "Image must be smaller than 1MB",
+    })
+    .refine(
+      (file) => ["image/jpeg", "image/png", "image/gif"].includes(file.type),
+      { message: "Unsupported format — try JPG, PNG, or GIF 🚀" }
+    ),
+  // Allow string (e.g., URL or placeholder)
+  z.string(),
+  // Allow null
+  z.null(),
+])
 
 /**
  * === Contact Me Form Validation Schema ===
@@ -45,23 +62,25 @@ export const signInFormSchema = z.object({
     .max(32, "Password must be less than 32 characters"),
 })
 
+export const technologySchema = z.object({
+  id: z.union([z.number(), z.string().transform(String)]).optional(),
+  name: z.string().min(2, "Technology name must be at least 2 characters").max(150, "Technology name must be less than 150 characters"),
+});
 
+const projectImageSchema = z.object({
+  imageUrl: imageSchema,
+  fieldId: z.string().nullable(),
+});
+
+const projectTechnologiesSchema = z.object({
+  id: z.number(),
+});
 
 export const projectFormSchema = z.object({
   slug: z.string().min(1, "Slug is required").regex(/^[a-z0-9-]+$/, "Slug must be lowercase and hyphenated"),
   
   title: z.string().min(1, "Title is required"),
-  mainImage: z
-  .instanceof(File, { message: "Main image is required" })
-  .refine((file) => file.size <= 2 * 1024 * 1024, {
-    message: "Image must be less than 2MB",
-  })
-  .refine(
-    (file) => ["image/jpeg", "image/png", "image/webp"].includes(file.type),
-    {
-      message: "Only JPG, PNG, or WEBP allowed",
-    }
-  ),
+  mainImage: imageSchema,
 
   shortDescription: z.string().min(1, "Short description is required"),
   description: z.string().nullable(),
@@ -79,4 +98,13 @@ export const projectFormSchema = z.object({
 
   client: z.string().max(150, { error: "Client name must be less than 150 characters" }).nullable(),
   teamSize: z.number().gt(0, { error: "Team Size must not be in negative" }),
+
+  projectImages: z.array(projectImageSchema),
+
+  technologies: z.array(projectTechnologiesSchema).min(1, { error: "Add atleast 1 technology" }),
 })
+
+export const projectJsonSchema = projectFormSchema.omit({
+  mainImage: true,
+  projectImages: true,
+});

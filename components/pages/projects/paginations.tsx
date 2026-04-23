@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 
 interface Props {
+  pageSizes?: number[];
   currentPage: number;
   totalPages: number;
   pageSize: number;
@@ -27,6 +28,7 @@ interface Props {
 const PAGE_SIZES = [10, 20, 30, 40, 50];
 
 export default function ProjectsPagination({
+  pageSizes,
   currentPage,
   totalPages,
   pageSize,
@@ -71,7 +73,7 @@ export default function ProjectsPagination({
 
           <SelectContent className="bg-card" position="popper">
             <SelectGroup>
-              {PAGE_SIZES.map((size) => (
+              {(pageSizes ?? PAGE_SIZES).map((size) => (
                 <SelectItem key={size} value={String(size)}>
                   {size}
                 </SelectItem>

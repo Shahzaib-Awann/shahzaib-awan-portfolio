@@ -16,6 +16,7 @@
 
 # other files
 /lib/dummyData.ts
+/lib/db/migrations/
 
 # next.js
 /.next/

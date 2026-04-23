@@ -29,6 +29,7 @@ export const projects = pgTable("projects", {
   title: text("title").notNull(),
 
   mainImage: text("main_image").notNull(),
+  mainImageFileId: text("main_image_file_id"),
 
   shortDescription: text("short_description").notNull(),
   description: text("description").notNull(), // markdown
@@ -48,7 +49,13 @@ export const projects = pgTable("projects", {
   teamSize: integer("team_size"),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
+})
+
+export const projectImages = pgTable("project_images", {
+  projectId: uuid("project_id").notNull().references(() => projects.id, { onDelete: "cascade" }),
+  url: text("url").notNull(),
+  fileId: text("file_id"),
 })
 
 export const projectTechnologies = pgTable("project_technologies", {
@@ -58,3 +65,14 @@ export const projectTechnologies = pgTable("project_technologies", {
     primaryKey({ columns: [table.projectId, table.technologyId] }),
   ]
 );
+
+
+// === Schema Export ===
+export const schemas = {
+  projects,
+  projectImages,
+  projectTechnologies,
+  technologies
+};
+
+export type schema = typeof schemas;

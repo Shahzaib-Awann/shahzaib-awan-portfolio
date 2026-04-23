@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 
@@ -23,6 +23,7 @@ import {
   Users,
   Star,
   Globe,
+  Cpu,
 } from "lucide-react";
 
 import toast from "react-hot-toast";
@@ -35,9 +36,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Image from "next/image";
+import { MultiSelect } from "@/components/ui/multi-select";
 
-const ProjectForm = () => {
+interface Props {
+  technologies: {
+    id: number;
+    name: string;
+  }[]
+}
+
+const ProjectForm = ({ technologies = [] }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof projectFormSchema>>({
     resolver: zodResolver(projectFormSchema),
@@ -56,17 +67,99 @@ const ProjectForm = () => {
       endDate: "",
       client: "",
       teamSize: 1,
+
+      projectImages: [],
+      technologies: [],
     },
   });
 
+  const { control, setValue, watch } = form;
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "projectImages",
+  });
+
+  useEffect(() => {
+    return () => {
+      fields.forEach((_, index) => {
+        const file = form.getValues(`projectImages.${index}.imageUrl`);
+        if (file instanceof File) {
+          URL.revokeObjectURL(file as any);
+        }
+      });
+    };
+  }, [fields, form]);
+
   async function onSubmit(values: z.infer<typeof projectFormSchema>) {
+    const API_URL = "/api/projects";
+    const isEditing = false;
+
+    {
+      /* === Prepare FormData === */
+    }
+    const formData = new FormData();
+    const { mainImage, projectImages, ...rest } = values;
+
+    {
+      /* === Send Zod values (without image) as JSON string === */
+    }
+    formData.append("data", JSON.stringify(rest));
+
+    {
+      /* === Handle image === */
+    }
+    if (mainImage instanceof File) {
+      formData.append("mainImage", mainImage); // <- New file uploaded
+    } else if (mainImage === null) {
+      formData.append("mainImage", ""); // <- Signal to remove existing image
+    }
+
+    projectImages.forEach((item) => {
+      if (item.imageUrl instanceof File) {
+        formData.append("projectImages", item.imageUrl);
+      }
+    });
+
     try {
       setIsLoading(true);
       toast.loading("Creating project...", { id: "project-create" });
 
-      console.log(values);
+      const response = await fetch(API_URL, {
+        method: "POST",
+        body: formData,
+      });
+      const result = await response.json();
 
-      toast.success("Project created successfully!");
+      {
+        /* === Show warning toast for duplicate/409 error === */
+      }
+      if (response.status === 409) {
+        toast.error(result?.error ?? "Duplicate value found.");
+        return;
+      }
+
+      if (!response.ok) {
+        toast.error(
+          result?.error ??
+            (isEditing
+              ? "Project can't be updated. Please try again."
+              : "Project can't be created. Please try again."),
+        );
+        return;
+      }
+
+      toast.success(
+        result?.message ??
+          (isEditing
+            ? "Project updated successfully."
+            : "New Project added successfully."),
+      );
+
+      // Reset form only after successful create
+      if (!isEditing) {
+        // form.reset()
+      }
     } catch (e) {
       toast.error("Something went wrong");
       console.error(e);
@@ -76,6 +169,11 @@ const ProjectForm = () => {
     }
   }
 
+  const options = technologies?.map((tech) => ({
+    value: String(tech.id),
+    label: tech.name,
+  }));
+
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
@@ -83,7 +181,7 @@ const ProjectForm = () => {
     >
       <div className="grid grid-cols-2 w-full gap-5">
         {/* TITLE */}
-        <div className="flex flex-col col-span-2 gap-5 w-full">
+        <div className="flex flex-col gap-5 w-full">
           <label className="uppercase text-left">Title</label>
 
           <Controller
@@ -168,6 +266,47 @@ const ProjectForm = () => {
             )}
           />
         </div>
+
+        {/* Technology Stack */}
+        <div className="flex flex-col gap-5 w-full">
+          <label className="uppercase text-left">Technologies</label>
+
+          <Controller
+            name="technologies"
+            control={form.control}
+            render={({ field, fieldState }) => {
+              // Convert [{ id: number }] -> string[]
+              const valueAsStrings =
+                field.value?.map((t: { id: number }) => String(t.id)) || [];
+
+              return (
+                <Field>
+                  <div className="relative w-full">
+                    <Cpu className="absolute size-5 -translate-y-1/2 top-1/2 left-4 text-black/50 hidden sm:block pointer-events-none" />
+
+                    <MultiSelect
+                      options={options}
+                      value={valueAsStrings}
+                      placeholder="Choose Technologies..."
+                      className="text-black text-base! border border-black/25 min-h-15 pl-12 pr-7 w-full overflow-hidden"
+                      // Convert string[] -> [{ id: number }]
+                      onValueChange={(values: string[]) => {
+                        const mapped = values.map((v) => ({ id: Number(v) }));
+                        field.onChange(mapped);
+                      }}
+                    />
+                  </div>
+
+                  {fieldState.error && (
+                    <p className="text-sm text-red-500 mt-2">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </Field>
+              );
+            }}
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 w-full gap-5">
@@ -241,15 +380,46 @@ const ProjectForm = () => {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field>
-                <div className="relative">
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => field.onChange(e.target.files?.[0])}
-                    className="text-black text-base! border border-black/25 py-7 pl-12 pr-7"
-                  />
-                  <ImageIcon className="absolute size-5 -translate-1/2 top-1/2 left-7 text-black/75 pointer-events-none" />
-                </div>
+                {!mainImagePreview ? (
+                  <div className="relative w-full">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        field.onChange(file);
+
+                        if (file) {
+                          setMainImagePreview(URL.createObjectURL(file));
+                        }
+                      }}
+                      className="text-black text-base border border-black/25 py-7 pl-12 pr-7 w-full"
+                    />
+
+                    <ImageIcon className="absolute size-5 top-1/2 left-7 -translate-y-1/2 text-black/75 pointer-events-none" />
+                  </div>
+                ) : (
+                  <div className="relative max-w-full aspect-video rounded-lg border border-black/25 overflow-hidden">
+                    <Image
+                      src={mainImagePreview}
+                      alt="Preview"
+                      fill
+                      className="object-cover"
+                    />
+
+                    {/* change/remove image button */}
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        setMainImagePreview(null);
+                        field.onChange(undefined);
+                      }}
+                      className="absolute top-3 right-3 bg-black/60 text-white text-sm px-3 py-1 rounded"
+                    >
+                      Change
+                    </Button>
+                  </div>
+                )}
 
                 {fieldState.error && (
                   <p className="text-sm text-red-500 mt-2">
@@ -259,6 +429,80 @@ const ProjectForm = () => {
               </Field>
             )}
           />
+        </div>
+
+        {/* Other Images */}
+        <div className="flex flex-col gap-5 w-full">
+          <div className="flex items-center justify-between">
+            <label className="uppercase">Other Images</label>
+
+            <button
+              type="button"
+              className="bg-black text-white px-4 py-2 text-sm"
+              onClick={() =>
+                append({
+                  imageUrl: null,
+                  fieldId: crypto.randomUUID(),
+                })
+              }
+            >
+              Add Image
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {fields.map((item, index) => {
+              const file = watch(`projectImages.${index}.imageUrl`);
+
+              const preview =
+                file instanceof File ? URL.createObjectURL(file) : null;
+
+              return (
+                <div
+                  key={item.id}
+                  className="relative border border-black/20 rounded-lg overflow-hidden"
+                >
+                  {/* INPUT */}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+
+                      setValue(`projectImages.${index}.imageUrl`, file);
+                    }}
+                  />
+
+                  {/* PREVIEW OR EMPTY STATE */}
+                  {preview ? (
+                    <div className="relative w-full aspect-video">
+                      <Image
+                        src={preview}
+                        alt="project image"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center aspect-video text-sm text-black/50">
+                      Click to upload
+                    </div>
+                  )}
+
+                  {/* REMOVE BUTTON */}
+                  <Button
+                    type="button"
+                    onClick={() => remove(index)}
+                    className="absolute top-2 right-2 bg-red-500 text-white text-sm size-8 z-20"
+                  >
+                    ✕
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -274,8 +518,12 @@ const ProjectForm = () => {
               <Field>
                 <div className="relative">
                   <Input
-                    {...field}
                     value={field.value ?? ""}
+                    onChange={(v) =>
+                      field.onChange(
+                        v.target.value === "" ? null : v.target.value,
+                      )
+                    }
                     placeholder="GitHub URL"
                     className="text-black text-base! border border-black/25 py-7 pl-12 pr-7"
                   />
@@ -303,8 +551,12 @@ const ProjectForm = () => {
               <Field>
                 <div className="relative">
                   <Input
-                    {...field}
                     value={field.value ?? ""}
+                    onChange={(v) =>
+                      field.onChange(
+                        v.target.value === "" ? null : v.target.value,
+                      )
+                    }
                     placeholder="Live URL"
                     className="text-black text-base! border border-black/25 py-7 pl-12 pr-7"
                   />

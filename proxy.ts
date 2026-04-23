@@ -19,7 +19,12 @@ export async function proxy(request: NextRequest) {
    * Block unauthenticated access to /admin
    */
   if (!isLoggedIn && pathname.startsWith("/admin")) {
-    return NextResponse.redirect(new URL("/sign-in", request.url));
+    const callbackUrl = request.nextUrl.pathname + request.nextUrl.search;
+  
+    const redirectUrl = new URL("/sign-in", request.url);
+    redirectUrl.searchParams.set("callbackUrl", callbackUrl);
+  
+    return NextResponse.redirect(redirectUrl);
   }
 
   /**

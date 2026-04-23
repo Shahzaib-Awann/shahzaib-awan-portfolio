@@ -18,6 +18,7 @@ import { signOut } from "next-auth/react";
 // ================= LINKS =================
 const links = [
   { label: "Dashboard", href: "/admin" },
+  { label: "Technologies", href: "/admin/technologies" },
   { label: "Projects", href: "/admin/projects" },
   { label: "Blogs", href: "/admin/blogs" },
   { label: "Messages", href: "/admin/messages" },

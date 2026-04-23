@@ -1,12 +1,12 @@
 "use client";
 
-import { ProjectInterface } from "@/lib/definations";
+import { ProjectInterface0 } from "@/lib/definations";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
 interface Props {
-    projects: ProjectInterface[];
+    projects: ProjectInterface0[];
 }
 
 const ProjectCards = ({ projects = [] }: Props) => {
@@ -122,7 +122,7 @@ const ProjectCards = ({ projects = [] }: Props) => {
 };
 
 // Overlay Content (Desktop Hover State)
-const OverlayContent = ({ project }: { project: ProjectInterface }) => (
+const OverlayContent = ({ project }: { project: ProjectInterface0 }) => (
     <div className="flex absolute inset-0 flex-col justify-between p-6 sm:p-8 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 bg-black/60 text-white">
         {/* Top-right arrow icon */}
         <div className="flex items-center justify-end">
