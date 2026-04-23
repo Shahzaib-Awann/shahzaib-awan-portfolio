@@ -1,13 +1,13 @@
 "use client";
 
-import { ExternalLink, Eye } from "lucide-react";
+import { ProjectCard } from "@/lib/definations";
+import { ExternalLink, Eye, Pencil } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useCallback, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 
-
-const ProjectsShowcaseGrid = () => {
+const ProjectsShowcaseGrid = ({ projects = [], mode = 'public' }: { projects: ProjectCard[]; mode?: 'admin' | 'public' }) => {
 
   // Tracks which cards have expanded tech stacks
   const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
@@ -25,27 +25,21 @@ const ProjectsShowcaseGrid = () => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 space-y-10 items-start">
-      {Array(1)
-        .fill(null)
-        .map((_, index) => {
-          // Mock data (replace with real data later)
-          const image = "https://placehold.co/600x400.png";
-          const category = "Full-Stack";
-          const title = `Title - ${index+1}`;
-          const techStack = ["nextjs", "reactjs", "book", "hooks"];
+      {projects?.map((project, index) => {
 
-          const slug = `/projects/${index}`
+          const slug = `/projects/${project.slug}`
+          const editProjectLink = `/admin/projects/edit/${project.id}`
 
           // Check if current card is expanded
           const isExpanded = expandedIndexes.includes(index);
 
           // Show full or partial tech stack
           const visibleTech = isExpanded
-            ? techStack
-            : techStack.slice(0, 3);
+            ? project.technologies
+            : project.technologies.slice(0, 3);
 
           // Count remaining hidden tech items
-          const remaining = Math.max(techStack.length - 3, 0);
+          const remaining = Math.max(project.technologies.length - 3, 0);
 
           return (
             <div
@@ -57,8 +51,8 @@ const ProjectsShowcaseGrid = () => {
                 
                 {/* Project Image */}
                 <Image
-                  src={image}
-                  alt={title}
+                  src={safeImage(project.mainImage)}
+                  alt={project.title}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
@@ -71,7 +65,7 @@ const ProjectsShowcaseGrid = () => {
 
                 {/* Category Badge */}
                 <span className="absolute top-5 right-5 bg-black text-white text-sm px-2 py-1 rounded-md z-10">
-                  {category}
+                  {project.category}
                 </span>
 
                 {/* Hover Action Buttons */}
@@ -87,8 +81,9 @@ const ProjectsShowcaseGrid = () => {
                   </Link>
                   
                   {/* GitHub Link */}
-                  <Link
-                    href="#"
+                  {project.githubUrl &&
+                    <Link
+                    href={project.githubUrl}
                     target="_blank"
                     onClick={(e) => e.stopPropagation()}
                     title="View on Github"
@@ -96,17 +91,31 @@ const ProjectsShowcaseGrid = () => {
                   >
                     <FaGithub className="size-5 text-white" />
                   </Link>
+                  }
 
                   {/* Live Preview Link */}
-                  <Link
-                    href="#"
+                  {project.liveUrl &&
+                    <Link
+                    href={project.liveUrl}
                     target="_blank"
                     onClick={(e) => e.stopPropagation()}
                     title="View Live Demo"
                     className="p-3 rounded border border-black/20 bg-black/75 hover:bg-black transition"
-                  >
+                    >
                     <ExternalLink className="size-5 text-white" />
                   </Link>
+                  }
+
+                  {mode === 'admin' && 
+                  <Link
+                  href={editProjectLink}
+                  onClick={(e) => e.stopPropagation()}
+                  title="Edit This Project"
+                  className="p-3 rounded border border-black/20 bg-black/75 hover:bg-black transition"
+                >
+                  <Pencil className="size-5 text-white" />
+                </Link>
+                  }
                 </div>
               </div>
 
@@ -115,13 +124,13 @@ const ProjectsShowcaseGrid = () => {
                 
                 {/* Project Title */}
                 <Link href={slug} className="space-y-5 block">
-                <h3 title={title} className="text-2xl sm:text-3xl md:text-2xl lg:text-3xl font-semibold text-foreground line-clamp-2">
-                  {title}
+                <h3 title={project.title} className="text-2xl sm:text-3xl md:text-2xl lg:text-3xl font-semibold text-foreground line-clamp-2">
+                  {project.title || 'N/A'}
                 </h3>
 
                 {/* Project Description */}
-                <p className="text-muted-foreground text-base leading-relaxed line-clamp-5 sm:line-clamp-3 md:line-clamp-5">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Error cupiditate, nesciunt deserunt corporis, enim quibusdam consectetur itaque omnis corrupti minus non labore voluptatibus sit voluptas cumque, repellat qui asperiores soluta magnam numquam ipsam officiis repellendus ea aliquam! Rem consectetur ipsum nisi illum minus aspernatur dolore et sed! Quasi, unde necessitatibus.
+                <p title={project.shortDescription} className="text-muted-foreground text-base leading-relaxed line-clamp-5 sm:line-clamp-3 md:line-clamp-5">
+                  {project.shortDescription || 'N/A'}
                 </p>
                 </Link>
 
@@ -160,6 +169,16 @@ const ProjectsShowcaseGrid = () => {
         })}
     </div>
   );
+};
+
+const safeImage = (src?: string | null) => {
+  if (!src || src === "") {
+    return "https://placehold.co/600x400.png";
+  }
+
+  if (src.startsWith("http")) return src;
+
+  return "https://placehold.co/600x400.png";
 };
 
 export default ProjectsShowcaseGrid;

@@ -45,3 +45,16 @@ export interface ProjectInterface {
         id: number;
       }[];
   };
+
+  // Project Cards Interface 
+  export interface ProjectCard {
+    id: string;
+    slug: string;
+    title: string;
+    mainImage: string;
+    shortDescription: string;
+    category: string;
+    githubUrl: string | null;
+    liveUrl: string | null;
+    technologies: string[];
+  };
