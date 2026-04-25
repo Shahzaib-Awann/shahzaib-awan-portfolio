@@ -3,56 +3,10 @@
 import { desc, eq } from "drizzle-orm";
 import { db } from "../db";
 import { schemas } from "../db/schema";
-import { ProjectCard, ProjectInterface } from "../definations";
 
 
 
-const { projects, projectImages, projectTechnologies, technologies } = schemas;
-
-
-
-/**
- * Create a new project with images and technologies in a single transaction
- */
-export const insertNewProject = async (data: ProjectInterface) => {
-  return db.transaction(async (tx) => {
-    // insert main project
-    const [project] = await tx
-      .insert(projects)
-      .values({
-        ...data,
-        startDate: data.startDate || null,
-        endDate: data.endDate || null,
-      })
-      .returning();
-
-    // insert images
-    if (data.projectImages?.length) {
-      await tx.insert(projectImages).values(
-        data.projectImages.map((img) => ({
-          projectId: project.id,
-          url: img.imageUrl,
-          fileId: img.fileId ?? null,
-        })),
-      );
-    }
-
-    // insert technologies
-    if (data.technologies?.length) {
-      await tx.insert(projectTechnologies).values(
-        data.technologies.map((tech) => ({
-          projectId: project.id,
-          technologyId: tech.id,
-        })),
-      );
-    }
-
-    return {
-      id: project.id,
-      slug: project.slug,
-    };
-  });
-};
+const { projects, projectGalleryImages, projectTechnologies, technologies } = schemas;
 
 
 
@@ -90,8 +44,8 @@ export const getAllProjects = async () => {
         id: project.id,
         slug: project.slug,
         title: project.title,
-        mainImage: project.mainImage,
-        shortDescription: project.shortDescription,
+        coverImage: project.coverImageUrl,
+        shortSummary: project.shortSummary,
         category: project.category,
         githubUrl: project.githubUrl,
         liveUrl: project.liveUrl,
@@ -108,4 +62,41 @@ export const getAllProjects = async () => {
   }
 
   return Array.from(projectMap.values());
+};
+
+
+export const getProjectForEdit = async (id: string) => {
+  try {
+    const [baseProject] = await db
+      .select()
+      .from(projects)
+      .where(eq(projects.id, id));
+
+    const pTechnologies = await db
+      .select({ id: projectTechnologies.technologyId })
+      .from(projectTechnologies)
+      .where(eq(projectTechnologies.projectId, id));
+
+    const images = await db
+      .select({
+        imageUrl: projectGalleryImages.imageUrl,
+        fileId: projectGalleryImages.fileId,
+      })
+      .from(projectGalleryImages)
+      .where(eq(projectGalleryImages.projectId, id));
+
+    if (!baseProject) return null;
+
+    const formattedProject = {
+      ...baseProject,
+      galleryImages: images ?? [],
+      technologies: pTechnologies ?? [],
+    };
+
+    console.log("Final Project:", formattedProject);
+
+    return formattedProject;
+  } catch (e) {
+    console.error("Error while fetching the project for edit: ", e);
+  }
 };

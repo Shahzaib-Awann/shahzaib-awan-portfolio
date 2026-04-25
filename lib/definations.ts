@@ -16,11 +16,12 @@ export interface ProjectInterface {
     id?: ID;
     slug: string;
     title: string;
-    mainImage: string;
-    mainImageFileId: string | null;
+    coverImageUrl: string;
+    coverImageFileId?: string | null;
+    // coverImageFileId?: string | null;
   
-    shortDescription: string;
-    description: string;
+    shortSummary: string;
+    fullDescription: string;
   
     category: "frontend" | "backend" | "fullstack";
   
@@ -36,7 +37,7 @@ export interface ProjectInterface {
     client: string | null;
     teamSize: number | null;
 
-    projectImages?: {
+    galleryImages?: {
         imageUrl: string;
         fileId: string | null;
       }[];
@@ -44,6 +45,9 @@ export interface ProjectInterface {
     technologies: {
         id: number;
       }[];
+
+    createdAt?: string;
+    updateAt?: string;
   };
 
   // Project Cards Interface 
@@ -51,10 +55,43 @@ export interface ProjectInterface {
     id: string;
     slug: string;
     title: string;
-    mainImage: string;
-    shortDescription: string;
+    coverImage: string;
+    shortSummary: string;
     category: string;
     githubUrl: string | null;
     liveUrl: string | null;
     technologies: string[];
   };
+
+  export interface ProjectImage {
+    url: string;
+    fileId: string;
+  }
+  
+  export interface ProjectTechnology {
+    id: number;
+  }
+  
+  export interface Project {
+    id: string;
+    slug: string;
+    title: string;
+    mainImage: string;
+    mainImageFileId: string;
+    shortDescription: string;
+    description: string;
+    category: "frontend" | "backend" | "fullstack"; // adjust if needed
+    githubUrl: string;
+    liveUrl: string;
+    isFeatured: boolean;
+    isPublished: boolean;
+    startDate: string; // or Date if you convert it
+    endDate: string;   // or Date
+    client: string;
+    teamSize: number;
+    createdAt: Date;
+    updatedAt: Date;
+  
+    projectImages: ProjectImage[];
+    technologies: ProjectTechnology[];
+  }

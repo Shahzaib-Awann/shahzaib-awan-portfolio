@@ -38,26 +38,33 @@ import {
 } from "@/components/ui/select";
 import Image from "next/image";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { ProjectInterface } from "@/lib/definations";
 
 interface Props {
   technologies: {
     id: number;
     name: string;
-  }[]
+  }[];
+
+  data: ProjectInterface;
 }
 
-const ProjectForm = ({ technologies = [] }: Props) => {
+const ProjectForm = ({ technologies = [], data }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
+  const [deletedGalleryImages, setDeletedGalleryImages] = useState<string[]>(
+    [],
+  );
 
   const form = useForm<z.infer<typeof projectFormSchema>>({
     resolver: zodResolver(projectFormSchema),
     defaultValues: {
+      id: undefined,
       slug: "",
       title: "",
-      mainImage: undefined,
-      shortDescription: "",
-      description: "",
+      coverImage: undefined,
+      shortSummary: "",
+      fullDescription: "",
       category: "frontend",
       githubUrl: null,
       liveUrl: null,
@@ -68,7 +75,7 @@ const ProjectForm = ({ technologies = [] }: Props) => {
       client: "",
       teamSize: 1,
 
-      projectImages: [],
+      galleryImages: [],
       technologies: [],
     },
   });
@@ -77,13 +84,13 @@ const ProjectForm = ({ technologies = [] }: Props) => {
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "projectImages",
+    name: "galleryImages",
   });
 
   useEffect(() => {
     return () => {
       fields.forEach((_, index) => {
-        const file = form.getValues(`projectImages.${index}.imageUrl`);
+        const file = form.getValues(`galleryImages.${index}.imageUrl`);
         if (file instanceof File) {
           URL.revokeObjectURL(file as any);
         }
@@ -91,49 +98,117 @@ const ProjectForm = ({ technologies = [] }: Props) => {
     };
   }, [fields, form]);
 
+  /* === Load Initial Values When Editing === */
+  useEffect(() => {
+    const isReady = !!data?.id;
+
+    if (!isReady) return;
+
+    form.reset({
+      id: data.id ?? "",
+
+      slug: data.slug ?? "",
+      title: data.title ?? "",
+
+      coverImage: data.coverImageUrl ?? '',
+
+      shortSummary: data.shortSummary ?? "",
+      fullDescription: data.fullDescription ?? "",
+
+      category: data.category,
+
+      githubUrl: data.githubUrl ?? null,
+      liveUrl: data.liveUrl ?? null,
+
+      isFeatured: data.isFeatured ?? false,
+      isPublished: data.isPublished ?? false,
+
+      startDate: data.startDate ?? "",
+      endDate: data.endDate ?? "",
+
+      client: data.client ?? "",
+      teamSize: data.teamSize ?? 1,
+
+      galleryImages:
+        data.galleryImages?.map((img) => ({
+          imageUrl: img.imageUrl,
+          fileId: img.fileId ?? null,
+        })) ?? [],
+
+      technologies:
+        data.technologies?.map((t) => ({
+          id: t.id,
+        })) ?? [],
+    });
+
+    setMainImagePreview(data?.coverImageUrl ?? null);
+  }, [data, form]);
+
   async function onSubmit(values: z.infer<typeof projectFormSchema>) {
     const API_URL = "/api/projects";
-    const isEditing = false;
-
-    {
-      /* === Prepare FormData === */
-    }
-    const formData = new FormData();
-    const { mainImage, projectImages, ...rest } = values;
-
-    {
-      /* === Send Zod values (without image) as JSON string === */
-    }
-    formData.append("data", JSON.stringify(rest));
-
-    {
-      /* === Handle image === */
-    }
-    if (mainImage instanceof File) {
-      formData.append("mainImage", mainImage); // <- New file uploaded
-    } else if (mainImage === null) {
-      formData.append("mainImage", ""); // <- Signal to remove existing image
-    }
-
-    projectImages.forEach((item) => {
-      if (item.imageUrl instanceof File) {
-        formData.append("projectImages", item.imageUrl);
-      }
-    });
+    const isEditing = !!data.id;
 
     try {
       setIsLoading(true);
-      toast.loading("Creating project...", { id: "project-create" });
+      toast.loading(isEditing ? "Updating project..." : "Creating project...", {
+        id: "project-create",
+      });
 
+      // ===============================
+      // 1. Prepare FormData
+      // ===============================
+      const formData = new FormData();
+
+      const { coverImage, galleryImages, ...rest } = values;
+
+      // JSON payload (non-file data)
+      formData.append("data", JSON.stringify(rest));
+
+      formData.append(
+        "deleteGalleryImages",
+        JSON.stringify(deletedGalleryImages),
+      );
+
+      // ===============================
+      // 2. Handle cover image
+      // ===============================
+      if (coverImage instanceof File) {
+        formData.append("coverImage", coverImage);
+      } else if (coverImage === null) {
+        formData.append("coverImage", "");
+      }
+
+      // ===============================
+      // 3. Handle gallery images (multiple files)
+      // ===============================
+      galleryImages.forEach((item) => {
+        if (item.imageUrl instanceof File) {
+          formData.append("galleryImages", item.imageUrl);
+        }
+      });
+
+      // ===============================
+      // 4. Debug (safe logging)
+      // ===============================
+      console.log("FORMDATA ENTRIES:");
+      for (const [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+
+
+      // ===============================
+      // 5. API request
+      // ===============================
       const response = await fetch(API_URL, {
-        method: "POST",
+        method: isEditing ? "PUT" : "POST",
         body: formData,
       });
+
       const result = await response.json();
 
-      {
-        /* === Show warning toast for duplicate/409 error === */
-      }
+      // ===============================
+      // 6. Error handling
+      // ===============================
       if (response.status === 409) {
         toast.error(result?.error ?? "Duplicate value found.");
         return;
@@ -149,24 +224,37 @@ const ProjectForm = ({ technologies = [] }: Props) => {
         return;
       }
 
+      // ===============================
+      // 7. Success
+      // ===============================
       toast.success(
         result?.message ??
           (isEditing
             ? "Project updated successfully."
-            : "New Project added successfully."),
+            : "Project created successfully."),
       );
 
-      // Reset form only after successful create
+      // Optional reset
       if (!isEditing) {
-        // form.reset()
+        // form.reset();
       }
-    } catch (e) {
-      toast.error("Something went wrong");
-      console.error(e);
+    } catch (error) {
+      console.error("SUBMIT ERROR:", error);
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
       toast.dismiss("project-create");
     }
+  }
+
+  function handleRemoveGalleryImage(index: number) {
+    const image = watch(`galleryImages.${index}`);
+
+    if (image?.fileId) {
+      setDeletedGalleryImages((prev) => [...prev, image.fileId!]);
+    }
+
+    remove(index);
   }
 
   const options = technologies?.map((tech) => ({
@@ -248,7 +336,11 @@ const ProjectForm = ({ technologies = [] }: Props) => {
                 <div className="relative w-full">
                   <Layers className="absolute size-5 -translate-y-1/2 top-1/2 left-4 text-black/50 hidden sm:block pointer-events-none" />
 
-                  <Select value={field.value} onValueChange={field.onChange}>
+                  <Select
+                    key={field.value}
+                    value={field.value ?? ""}
+                    onValueChange={field.onChange}
+                  >
                     <SelectTrigger className="text-black text-base! border border-black/25 py-7 pl-12 pr-7 w-full overflow-hidden">
                       <SelectValue placeholder="Select Category" />
                     </SelectTrigger>
@@ -288,6 +380,7 @@ const ProjectForm = ({ technologies = [] }: Props) => {
                       options={options}
                       value={valueAsStrings}
                       placeholder="Choose Technologies..."
+                      defaultValue={valueAsStrings}
                       className="text-black text-base! border border-black/25 min-h-15 pl-12 pr-7 w-full overflow-hidden"
                       // Convert string[] -> [{ id: number }]
                       onValueChange={(values: string[]) => {
@@ -317,7 +410,7 @@ const ProjectForm = ({ technologies = [] }: Props) => {
             <span className="text-xs text-muted-foreground">(Text)</span>
           </label>
           <Controller
-            name="shortDescription"
+            name="shortSummary"
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
@@ -346,7 +439,7 @@ const ProjectForm = ({ technologies = [] }: Props) => {
             <span className="text-xs text-muted-foreground">(markdown)</span>
           </label>
           <Controller
-            name="description"
+            name="fullDescription"
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
@@ -376,7 +469,7 @@ const ProjectForm = ({ technologies = [] }: Props) => {
           <label className="uppercase text-left">Main Image</label>
 
           <Controller
-            name="mainImage"
+            name="coverImage"
             control={form.control}
             render={({ field, fieldState }) => (
               <Field>
@@ -387,9 +480,9 @@ const ProjectForm = ({ technologies = [] }: Props) => {
                       accept="image/*"
                       onChange={(e) => {
                         const file = e.target.files?.[0];
-                        field.onChange(file);
 
                         if (file) {
+                          field.onChange(file);
                           setMainImagePreview(URL.createObjectURL(file));
                         }
                       }}
@@ -442,7 +535,7 @@ const ProjectForm = ({ technologies = [] }: Props) => {
               onClick={() =>
                 append({
                   imageUrl: null,
-                  fieldId: crypto.randomUUID(),
+                  fileId: null,
                 })
               }
             >
@@ -452,10 +545,14 @@ const ProjectForm = ({ technologies = [] }: Props) => {
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {fields.map((item, index) => {
-              const file = watch(`projectImages.${index}.imageUrl`);
+              const file = watch(`galleryImages.${index}.imageUrl`);
 
               const preview =
-                file instanceof File ? URL.createObjectURL(file) : null;
+                file instanceof File
+                  ? URL.createObjectURL(file)
+                  : typeof file === "string"
+                    ? file
+                    : null;
 
               return (
                 <div
@@ -471,7 +568,10 @@ const ProjectForm = ({ technologies = [] }: Props) => {
                       const file = e.target.files?.[0];
                       if (!file) return;
 
-                      setValue(`projectImages.${index}.imageUrl`, file);
+                      setValue(`galleryImages.${index}.imageUrl`, file, {
+                        shouldDirty: true,
+                        shouldValidate: true,
+                      });
                     }}
                   />
 
@@ -494,7 +594,7 @@ const ProjectForm = ({ technologies = [] }: Props) => {
                   {/* REMOVE BUTTON */}
                   <Button
                     type="button"
-                    onClick={() => remove(index)}
+                    onClick={() => handleRemoveGalleryImage(index)}
                     className="absolute top-2 right-2 bg-red-500 text-white text-sm size-8 z-20"
                   >
                     ✕

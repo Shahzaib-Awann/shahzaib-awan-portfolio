@@ -1,4 +1,5 @@
-import * as React from "react";
+"use client";
+
 import { cva, type VariantProps } from "class-variance-authority";
 import {
 	CheckIcon,
@@ -26,6 +27,7 @@ import {
 	CommandList,
 	CommandSeparator,
 } from "@/components/ui/command";
+import React from "react";
 
 /**
  * Animation types and configurations

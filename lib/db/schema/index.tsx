@@ -1,7 +1,23 @@
-import { boolean, date, integer, pgEnum, pgTable, primaryKey, serial, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  date,
+  integer,
+  pgEnum,
+  pgTable,
+  primaryKey,
+  serial,
+  text,
+  timestamp,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 export const userRoleEnum = pgEnum("user_role", ["admin", "manager"]);
-export const projectCategoryEnum = pgEnum("project_category", ["frontend", "backend", "fullstack"]);
+export const projectCategoryEnum = pgEnum("project_category", [
+  "frontend",
+  "backend",
+  "fullstack",
+]);
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -15,24 +31,21 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-
 export const technologies = pgTable("technologies", {
   id: serial("id").primaryKey(),
-  name: varchar("name", { length: 255 }).unique().notNull()
-})
+  name: varchar("name", { length: 255 }).unique().notNull(),
+});
 
 export const projects = pgTable("projects", {
   id: uuid("id").defaultRandom().primaryKey(),
-
   slug: text("slug").unique().notNull(),
 
+  coverImageUrl: text("cover_image_url").notNull(),
+  coverImageFileId: text("cover_image_file_id"),
+
   title: text("title").notNull(),
-
-  mainImage: text("main_image").notNull(),
-  mainImageFileId: text("main_image_file_id"),
-
-  shortDescription: text("short_description").notNull(),
-  description: text("description").notNull(), // markdown
+  shortSummary: text("short_summary").notNull(),
+  fullDescription: text("full_description").notNull(), // markdown
 
   category: projectCategoryEnum("category").notNull(),
 
@@ -50,29 +63,35 @@ export const projects = pgTable("projects", {
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
-})
+});
 
-export const projectImages = pgTable("project_images", {
-  projectId: uuid("project_id").notNull().references(() => projects.id, { onDelete: "cascade" }),
-  url: text("url").notNull(),
+export const projectGalleryImages = pgTable("project_gallery_images", {
+  projectId: uuid("project_id")
+    .notNull()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  imageUrl: text("image_url").notNull(),
   fileId: text("file_id"),
-})
+});
 
-export const projectTechnologies = pgTable("project_technologies", {
-    projectId: uuid("project_id").notNull().references(() => projects.id, { onDelete: "cascade" }),
-    technologyId: integer("technology_id").notNull().references(() => technologies.id, { onDelete: "cascade" }),
-  }, (table) => [
-    primaryKey({ columns: [table.projectId, table.technologyId] }),
-  ]
+export const projectTechnologies = pgTable(
+  "project_technologies",
+  {
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    technologyId: integer("technology_id")
+      .notNull()
+      .references(() => technologies.id, { onDelete: "cascade" }),
+  },
+  (table) => [primaryKey({ columns: [table.projectId, table.technologyId] })],
 );
-
 
 // === Schema Export ===
 export const schemas = {
   projects,
-  projectImages,
+  projectGalleryImages,
   projectTechnologies,
-  technologies
+  technologies,
 };
 
 export type schema = typeof schemas;

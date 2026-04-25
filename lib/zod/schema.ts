@@ -1,7 +1,7 @@
 import z from 'zod';
 
 
-const imageSchema = z
+const projectImageInputSchema = z
 .union([
   // Validate if the input is a File instance
   z
@@ -11,7 +11,7 @@ const imageSchema = z
     })
     .refine(
       (file) => ["image/jpeg", "image/png", "image/gif"].includes(file.type),
-      { message: "Unsupported format — try JPG, PNG, or GIF 🚀" }
+      { message: "Only JPG, PNG, or GIF formats are allowed" }
     ),
   // Allow string (e.g., URL or placeholder)
   z.string(),
@@ -67,23 +67,26 @@ export const technologySchema = z.object({
   name: z.string().min(2, "Technology name must be at least 2 characters").max(150, "Technology name must be less than 150 characters"),
 });
 
-const projectImageSchema = z.object({
-  imageUrl: imageSchema,
-  fieldId: z.string().nullable(),
+const projectGalleryImageSchema = z.object({
+  imageUrl: projectImageInputSchema,
+  fileId: z.string().nullable(),
 });
 
-const projectTechnologiesSchema = z.object({
+const projectTechnologySchema = z.object({
   id: z.number(),
 });
 
 export const projectFormSchema = z.object({
+  id: z.union([z.number(), z.string().transform(String)]).optional(),
+
   slug: z.string().min(1, "Slug is required").regex(/^[a-z0-9-]+$/, "Slug must be lowercase and hyphenated"),
   
   title: z.string().min(1, "Title is required"),
-  mainImage: imageSchema,
 
-  shortDescription: z.string().min(1, "Short description is required"),
-  description: z.string().nullable(),
+  coverImage: projectImageInputSchema,
+
+  shortSummary: z.string().min(1, "Short description is required"),
+  fullDescription: z.string().nullable(),
 
   category: z.enum(["frontend", "backend", "fullstack"]),
 
@@ -99,12 +102,12 @@ export const projectFormSchema = z.object({
   client: z.string().max(150, { error: "Client name must be less than 150 characters" }).nullable(),
   teamSize: z.number().gt(0, { error: "Team Size must not be in negative" }),
 
-  projectImages: z.array(projectImageSchema),
+  galleryImages: z.array(projectGalleryImageSchema),
 
-  technologies: z.array(projectTechnologiesSchema).min(1, { error: "Add atleast 1 technology" }),
+  technologies: z.array(projectTechnologySchema).min(1, { error: "Add atleast 1 technology" }),
 })
 
 export const projectJsonSchema = projectFormSchema.omit({
-  mainImage: true,
-  projectImages: true,
+  coverImage: true,
+  galleryImages: true,
 });

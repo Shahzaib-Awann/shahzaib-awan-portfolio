@@ -51,7 +51,7 @@ const ProjectsShowcaseGrid = ({ projects = [], mode = 'public' }: { projects: Pr
                 
                 {/* Project Image */}
                 <Image
-                  src={safeImage(project.mainImage)}
+                  src={safeImage(project.coverImage)}
                   alt={project.title}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -129,8 +129,8 @@ const ProjectsShowcaseGrid = ({ projects = [], mode = 'public' }: { projects: Pr
                 </h3>
 
                 {/* Project Description */}
-                <p title={project.shortDescription} className="text-muted-foreground text-base leading-relaxed line-clamp-5 sm:line-clamp-3 md:line-clamp-5">
-                  {project.shortDescription || 'N/A'}
+                <p title={project.shortSummary} className="text-muted-foreground text-base leading-relaxed line-clamp-5 sm:line-clamp-3 md:line-clamp-5">
+                  {project.shortSummary || 'N/A'}
                 </p>
                 </Link>
 
