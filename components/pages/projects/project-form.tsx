@@ -878,10 +878,11 @@ const ProjectForm = ({ technologies = [], data }: Props) => {
         {isLoading ? (
           <span className="flex items-center gap-2">
             <Loader2 className="h-4 w-4 animate-spin" />
-            Creating...
+            {data.id ? 'Updating...' : 'Creating...' }
           </span>
         ) : (
-          "Create Project"
+           <span>
+          {data.id ? 'Update Project' : "Create Project" }</span>
         )}
       </Button>
     </form>
