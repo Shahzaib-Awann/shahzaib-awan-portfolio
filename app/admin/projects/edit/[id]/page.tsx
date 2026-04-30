@@ -18,6 +18,7 @@ const EditProjectPage = async ({ params }: PageProps) => {
           <h1 className="text-xl sm:text-3xl md:text-5xl uppercase font-bold tracking-tight text-foreground  transition-all duration-300">Edit Project <span className='text-sm font-semibold'>{id}</span></h1>
   
           <ProjectForm technologies={technologies} data={project} />
+          
       </div>
     )
 }

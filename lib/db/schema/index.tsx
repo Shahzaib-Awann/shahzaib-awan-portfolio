@@ -2,6 +2,7 @@ import {
   boolean,
   date,
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   primaryKey,
@@ -45,7 +46,7 @@ export const projects = pgTable("projects", {
 
   title: text("title").notNull(),
   shortSummary: text("short_summary").notNull(),
-  fullDescription: text("full_description").notNull(), // markdown
+  fullDescription: jsonb("full_description").notNull(), // Lexical JSON Editor
 
   category: projectCategoryEnum("category").notNull(),
 
@@ -66,9 +67,7 @@ export const projects = pgTable("projects", {
 });
 
 export const projectGalleryImages = pgTable("project_gallery_images", {
-  projectId: uuid("project_id")
-    .notNull()
-    .references(() => projects.id, { onDelete: "cascade" }),
+  projectId: uuid("project_id").notNull().references(() => projects.id, { onDelete: "cascade" }),
   imageUrl: text("image_url").notNull(),
   fileId: text("file_id"),
 });
@@ -76,12 +75,8 @@ export const projectGalleryImages = pgTable("project_gallery_images", {
 export const projectTechnologies = pgTable(
   "project_technologies",
   {
-    projectId: uuid("project_id")
-      .notNull()
-      .references(() => projects.id, { onDelete: "cascade" }),
-    technologyId: integer("technology_id")
-      .notNull()
-      .references(() => technologies.id, { onDelete: "cascade" }),
+    projectId: uuid("project_id").notNull().references(() => projects.id, { onDelete: "cascade" }),
+    technologyId: integer("technology_id").notNull().references(() => technologies.id, { onDelete: "cascade" }),
   },
   (table) => [primaryKey({ columns: [table.projectId, table.technologyId] })],
 );

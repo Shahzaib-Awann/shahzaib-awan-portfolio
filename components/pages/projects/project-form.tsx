@@ -39,6 +39,7 @@ import {
 import Image from "next/image";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { ProjectInterface } from "@/lib/definations";
+import RichTextEditor from "@/components/widgets/text-editor/rich-text-editor";
 
 interface Props {
   technologies: {
@@ -46,7 +47,7 @@ interface Props {
     name: string;
   }[];
 
-  data: ProjectInterface;
+  data?: ProjectInterface;
 }
 
 const ProjectForm = ({ technologies = [], data }: Props) => {
@@ -146,7 +147,7 @@ const ProjectForm = ({ technologies = [], data }: Props) => {
 
   async function onSubmit(values: z.infer<typeof projectFormSchema>) {
     const API_URL = "/api/projects";
-    const isEditing = !!data.id;
+    const isEditing = !!data?.id;
 
     try {
       setIsLoading(true);
@@ -191,9 +192,15 @@ const ProjectForm = ({ technologies = [], data }: Props) => {
       // 4. Debug (safe logging)
       // ===============================
       console.log("FORMDATA ENTRIES:");
-      for (const [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
+      // for (const [key, value] of formData.entries()) {
+      //   console.log(key, value);
+      // }
+
+      const dataObj = JSON.parse(formData.get("data") as string);
+
+console.log("fullDescription:", dataObj.fullDescription);
+
+      return;
 
 
       // ===============================
@@ -443,15 +450,13 @@ const ProjectForm = ({ technologies = [], data }: Props) => {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <textarea
-                  {...field}
-                  value={field.value ?? ""}
-                  className="text-black w-full h-full max-h-100 min-h-50 border border-black/25 p-5 rounded-lg ring-0 outline-0"
-                  placeholder="# Markdown Description"
-                  id="message-input-field"
-                  autoComplete="off"
-                  aria-invalid={fieldState.invalid}
-                />
+                <RichTextEditor
+                key={field.name}
+                          className="w-full rounded-lg border border-black/25"
+                          placeholder="Write long description here"
+                          value={field.value ?? ""}
+                          onChange={(value) => field.onChange(value)}
+                        />
                 {fieldState.error && (
                   <p className="text-sm text-red-500 mt-2">
                     {fieldState.error.message}
@@ -878,11 +883,11 @@ const ProjectForm = ({ technologies = [], data }: Props) => {
         {isLoading ? (
           <span className="flex items-center gap-2">
             <Loader2 className="h-4 w-4 animate-spin" />
-            {data.id ? 'Updating...' : 'Creating...' }
+            {data?.id ? 'Updating...' : 'Creating...' }
           </span>
         ) : (
            <span>
-          {data.id ? 'Update Project' : "Create Project" }</span>
+          {data?.id ? 'Update Project' : "Create Project" }</span>
         )}
       </Button>
     </form>
