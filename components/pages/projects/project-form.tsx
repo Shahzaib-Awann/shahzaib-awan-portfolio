@@ -111,7 +111,7 @@ const ProjectForm = ({ technologies = [], data }: Props) => {
       slug: data.slug ?? "",
       title: data.title ?? "",
 
-      coverImage: data.coverImageUrl ?? '',
+      coverImage: data.coverImageUrl ?? "",
 
       shortSummary: data.shortSummary ?? "",
       fullDescription: data.fullDescription ?? "",
@@ -198,10 +198,9 @@ const ProjectForm = ({ technologies = [], data }: Props) => {
 
       const dataObj = JSON.parse(formData.get("data") as string);
 
-console.log("fullDescription:", dataObj.fullDescription);
+      console.log("fullDescription:", dataObj.fullDescription);
 
       return;
-
 
       // ===============================
       // 5. API request
@@ -451,12 +450,12 @@ console.log("fullDescription:", dataObj.fullDescription);
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <RichTextEditor
-                key={field.name}
-                          className="w-full rounded-lg border border-black/25"
-                          placeholder="Write long description here"
-                          value={field.value ?? ""}
-                          onChange={(value) => field.onChange(value)}
-                        />
+                  key={field.name}
+                  className="w-full rounded-lg border border-black/25"
+                  placeholder="Write long description here"
+                  value={field.value ?? ""}
+                  onChange={(value) => field.onChange(value)}
+                />
                 {fieldState.error && (
                   <p className="text-sm text-red-500 mt-2">
                     {fieldState.error.message}
@@ -883,11 +882,10 @@ console.log("fullDescription:", dataObj.fullDescription);
         {isLoading ? (
           <span className="flex items-center gap-2">
             <Loader2 className="h-4 w-4 animate-spin" />
-            {data?.id ? 'Updating...' : 'Creating...' }
+            {data?.id ? "Updating..." : "Creating..."}
           </span>
         ) : (
-           <span>
-          {data?.id ? 'Update Project' : "Create Project" }</span>
+          <span>{data?.id ? "Update Project" : "Create Project"}</span>
         )}
       </Button>
     </form>
