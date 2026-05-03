@@ -1,3 +1,4 @@
+import { SerializedEditorState } from "lexical";
 
 // Project Interface (Landing Page)
 export interface ProjectInterface0 {
@@ -94,4 +95,34 @@ export interface ProjectInterface {
   
     projectImages: ProjectImage[];
     technologies: ProjectTechnology[];
+  }
+
+  export interface ProjectDetailViewInterface {
+    id: string;
+    slug: string;
+  
+    coverImage: string;
+    title: string;
+    shortSummary: string;
+    fullDescription: SerializedEditorState; // replace with your Lexical type if available
+  
+    category: "frontend" | "backend" | "fullstack";
+  
+    githubUrl: string | null;
+    liveUrl: string | null;
+  
+    isFeatured: boolean;
+    isPublished: boolean;
+  
+    startDate: string | null;
+    endDate: string | null;
+  
+    client: string;
+    teamSize: number;
+  
+    createdAt: string;
+    updatedAt: string | null;
+  
+    galleryImages: string[];
+    technologies: string[];
   }

@@ -1,9 +1,13 @@
 import ProjectCards from "@/components/widgets/project-card";
-import { projects } from "@/lib/dummyData";
+import { getFeaturedProjects } from "@/lib/actions/projects";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
-const ProjectsSection = () => {
+const ProjectsSection = async () => {
+
+    const projects = await getFeaturedProjects();
+    console.log(projects)
+
     return (
         <section
             id="projects"
@@ -42,7 +46,13 @@ const ProjectsSection = () => {
 
                     {/* Project cards container */}
                     <div className="w-full max-w-6xl">
-                        <ProjectCards projects={projects} />
+                        {projects?.length ? (
+                            <ProjectCards projects={projects} />
+                        ) : (
+                            <p className="text-red-500 text-center">
+                                No projects found. Please try again later.
+                            </p>
+                        )}
                     </div>
 
                     {/* Right decorative pattern */}

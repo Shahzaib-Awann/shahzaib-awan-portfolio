@@ -1,6 +1,7 @@
 "use client";
 
 import { ProjectCard } from "@/lib/definations";
+import { safeImage } from "@/lib/utils";
 import { ExternalLink, Eye, Pencil } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -169,16 +170,6 @@ const ProjectsShowcaseGrid = ({ projects = [], mode = 'public' }: { projects: Pr
         })}
     </div>
   );
-};
-
-const safeImage = (src?: string | null) => {
-  if (!src || src === "") {
-    return "https://placehold.co/600x400.png";
-  }
-
-  if (src.startsWith("http")) return src;
-
-  return "https://placehold.co/600x400.png";
 };
 
 export default ProjectsShowcaseGrid;

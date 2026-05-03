@@ -9,12 +9,12 @@
 export default {
   code: "editor-code",
   heading: {
-    h1: "text-2xl font-semibold text-black m-0 mb-1 p-0",
-    h2: "text-xl font-semibold text-black m-0 my-1 p-0",
-    h3: "text-lg font-semibold text-black m-0 my-1 p-0",
-    h4: "text-base font-semibold text-black m-0 my-1 p-0",
-    h5: "text-sm font-semibold text-black m-0 my-1 p-0",
-    h6: "text-xs font-semibold text-black m-0 my-2 p-0",
+    h1: "text-3xl font-semibold text-black m-0 mb-1 p-0",
+    h2: "text-2xl font-semibold text-black m-0 my-1 p-0",
+    h3: "text-xl font-semibold text-black m-0 my-1 p-0",
+    h4: "text-lg font-semibold text-black m-0 my-1 p-0",
+    h5: "text-base font-semibold text-black m-0 my-1 p-0",
+    h6: "text-sm font-semibold text-black m-0 my-2 p-0",
   },
   image: "editor-image",
   link: "editor-link- text-blue-700 hover:underline hover:cursor-pointer",
@@ -31,7 +31,7 @@ export default {
   quote:
     "m-0 text-base text-black/75 border-l-4 border-black/50 pl-4 bg-black/5 rounded-l-none rounded-r",
   text: {
-    bold: "font-semibold",
+    bold: "font-bold",
     code: "editor-text-code",
     hashtag: "editor-text-hashtag ",
     italic: "italic",

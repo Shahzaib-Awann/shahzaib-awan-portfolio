@@ -1,12 +1,13 @@
 "use client";
 
-import { ProjectInterface0 } from "@/lib/definations";
+import { ProjectCard } from "@/lib/definations";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { safeImage } from "@/lib/utils";
 
 interface Props {
-    projects: ProjectInterface0[];
+    projects: ProjectCard[];
 }
 
 const ProjectCards = ({ projects = [] }: Props) => {
@@ -21,15 +22,10 @@ const ProjectCards = ({ projects = [] }: Props) => {
                     const patternIndex = index % 4;
                     const isVideo = patternIndex === 0 || patternIndex === 3;
 
-                    // Fallback image
-                    const FallbackImage =
-                        project.image ||
-                        "/assets/shahzaib-awan-portfolio-hero-image.png";
-
                     return (
                         <Link
                             key={project.id}
-                            href={`/project/${project.slug}`}
+                            href={`/projects/${project.slug}`}
                             className={`relative group w-full ${isVideo ? "col-span-2 aspect-video" : "col-span-1 h-full"
                                 }`}
                         >
@@ -43,7 +39,7 @@ const ProjectCards = ({ projects = [] }: Props) => {
                                 {/* Project image */}
                                 <div className="relative w-full h-full">
                                     <Image
-                                        src={FallbackImage}
+                                        src={safeImage(project.coverImage)}
                                         alt={project.title}
                                         fill
                                         className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -65,22 +61,17 @@ const ProjectCards = ({ projects = [] }: Props) => {
                     // Alternate row direction for visual variety
                     const isReverse = index % 2 !== 0;
 
-                    // Fallback image
-                    const FallbackImage =
-                        project.image ||
-                        "/assets/shahzaib-awan-portfolio-hero-image.png";
-
                     return (
                         <Link
                             key={project.id}
-                            href={`/project/${project.slug}`}
+                            href={`/projects/${project.slug}`}
                             className={`flex flex-col sm:flex-row ${isReverse ? "sm:flex-row-reverse" : ""
                                 } group rounded-2xl overflow-hidden border border-white/20 bg-foreground`}
                         >
                             {/* Image */}
                             <div className="relative w-full sm:w-1/2 h-48 sm:h-auto overflow-hidden">
                                 <Image
-                                    src={FallbackImage}
+                                    src={safeImage(project.coverImage)}
                                     alt={project.title}
                                     fill
                                     className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -106,7 +97,7 @@ const ProjectCards = ({ projects = [] }: Props) => {
                                     </h3>
 
                                     <p className="mt-2 text-base text-white/70 line-clamp-3">
-                                        {project.shortDesc}
+                                        {project.shortSummary}
                                     </p>
                                 </div>
 
@@ -122,7 +113,7 @@ const ProjectCards = ({ projects = [] }: Props) => {
 };
 
 // Overlay Content (Desktop Hover State)
-const OverlayContent = ({ project }: { project: ProjectInterface0 }) => (
+const OverlayContent = ({ project }: { project: ProjectCard }) => (
     <div className="flex absolute inset-0 flex-col justify-between p-6 sm:p-8 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 bg-black/60 text-white">
         {/* Top-right arrow icon */}
         <div className="flex items-center justify-end">
@@ -135,10 +126,10 @@ const OverlayContent = ({ project }: { project: ProjectInterface0 }) => (
                 {project.title}
             </h3>
             <p
-                title={project.shortDesc}
+                title={project.shortSummary}
                 className="mt-2 text-base leading-relaxed line-clamp-2 md:line-clamp-3 lg:line-clamp-3 xl:line-clamp-5"
             >
-                {project.shortDesc}
+                {project.shortSummary}
             </p>
         </div>
 

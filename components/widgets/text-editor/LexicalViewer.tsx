@@ -6,9 +6,14 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
-import type { SerializedEditorState } from "lexical";
+import { ParagraphNode, TextNode, type SerializedEditorState } from "lexical";
 import { LEXICAL_EMPTY_STATE } from "./plugins/utils";
-
+import { HeadingNode, QuoteNode } from "@lexical/rich-text";
+import { ListItemNode, ListNode } from "@lexical/list";
+import { LinkNode } from "@lexical/link";
+import { CodeHighlightNode, CodeNode } from "@lexical/code";
+import ExampleTheme from "./theme";
+import ExternalLinkPlugin from "./plugins/ExternalLinkPlugin";
 
 
 /**
@@ -17,8 +22,6 @@ import { LEXICAL_EMPTY_STATE } from "./plugins/utils";
  * - `SerializedEditorState`: Raw Lexical editor state object
  */
 type LexicalValue = string | SerializedEditorState;
-
-
 
 /**
  * === Read-only Lexical rich-text viewer ===
@@ -35,6 +38,8 @@ type LexicalValue = string | SerializedEditorState;
  */
 export default function LexicalViewer({ value }: { value: LexicalValue }) {
 
+  
+
   // Normalize editor state to JSON string
   const editorState =
     typeof value === "string"
@@ -49,9 +54,21 @@ export default function LexicalViewer({ value }: { value: LexicalValue }) {
         namespace: "Viewer",
         editorState,
         editable: false,
+        theme: ExampleTheme,
         onError(error) {
           console.error("Lexical Viewer Error:", error);
         },
+        nodes: [
+          ParagraphNode,
+          TextNode,
+          HeadingNode,
+          ListNode,
+          ListItemNode,
+          LinkNode,
+          CodeNode,
+          CodeHighlightNode,
+          QuoteNode,
+        ],
       }}
     >
       
@@ -64,6 +81,7 @@ export default function LexicalViewer({ value }: { value: LexicalValue }) {
 
       {/* Maintain editor state compatibility */}
       <HistoryPlugin />
+      <ExternalLinkPlugin />
     </LexicalComposer>
   );
 }

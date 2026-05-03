@@ -192,15 +192,9 @@ const ProjectForm = ({ technologies = [], data }: Props) => {
       // 4. Debug (safe logging)
       // ===============================
       console.log("FORMDATA ENTRIES:");
-      // for (const [key, value] of formData.entries()) {
-      //   console.log(key, value);
-      // }
-
-      const dataObj = JSON.parse(formData.get("data") as string);
-
-      console.log("fullDescription:", dataObj.fullDescription);
-
-      return;
+      for (const [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
 
       // ===============================
       // 5. API request

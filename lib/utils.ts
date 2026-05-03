@@ -24,3 +24,14 @@ export function formatDateWithSuffix(dateString: string | Date) {
 
   return `${month} ${day}${suffix}`;
 }
+
+
+export const safeImage = (src?: string | null) => {
+  if (!src || src === "") {
+    return "https://placehold.co/600x400.png";
+  }
+
+  if (src.startsWith("http")) return src;
+
+  return "https://placehold.co/600x400.png";
+};
