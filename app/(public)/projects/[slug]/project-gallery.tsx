@@ -13,6 +13,7 @@ import { useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ImageViewer from "./imageViewer";
 
 export default function ProjectGallery({
   images,
@@ -23,6 +24,9 @@ export default function ProjectGallery({
 }) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState<number>(0);
+
+  const [open, setOpen] = useState(false);
+const [startIndex, setStartIndex] = useState(0);
 
   useEffect(() => {
     if (!api) return;
@@ -46,6 +50,11 @@ export default function ProjectGallery({
     [api],
   );
 
+  const openViewer = (index: number) => {
+    setStartIndex(index);
+    setOpen(true);
+  };
+
   return (
     <div className={cn("w-full mx-auto relative", className)}>
       {/* MAIN IMAGE CAROUSEL */}
@@ -61,8 +70,8 @@ export default function ProjectGallery({
       >
         <CarouselContent>
           {images.map((src, index) => (
-            <CarouselItem key={index}>
-              <Card className="bg-transparent border-none shadow-none">
+            <CarouselItem key={index} onClick={() => openViewer(index)}>
+              <Card className="bg-transparent border-none shadow-none p-0">
                 <CardContent className="relative aspect-video p-0">
                   <Image
                     src={src}
@@ -98,13 +107,13 @@ export default function ProjectGallery({
       </Carousel>
 
       {/* THUMBNAILS */}
-      <div className="mt-0">
+      <div className="mt-4">
         <Carousel>
-          <CarouselContent className="flex gap-2 px-7">
+          <CarouselContent className="flex gap-2 px-5">
             {images.map((src, index) => (
               <CarouselItem
                 key={index}
-                className="basis-1/5 p-1"
+                className="basis-1/5"
                 onClick={() => handleThumbClick(index)}
               >
                 <Card
@@ -136,6 +145,14 @@ export default function ProjectGallery({
           </CarouselContent>
         </Carousel>
       </div>
+
+      <ImageViewer
+        images={images}
+        open={open}
+        startIndex={startIndex}
+        onClose={() => setOpen(false)}
+      />
+
     </div>
   );
 }

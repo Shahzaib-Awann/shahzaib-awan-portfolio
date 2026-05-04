@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -35,21 +35,25 @@ export default function ProjectsPagination({
 }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   const updateParams = useCallback(
     (key: string, value: string | number) => {
       const params = new URLSearchParams(searchParams.toString());
-  
+
       params.set(key, String(value));
-  
+
       // If pageSize changes, remove page completely (page 1 is default)
       if (key === "pageSize") {
         params.delete("page");
       }
-  
-      router.replace(`?${params.toString()}`);
+
+      const query = params.toString();
+      const url = query ? `${pathname}?${query}` : pathname;
+
+      router.replace(url);
     },
-    [router, searchParams]
+    [router, pathname, searchParams],
   );
 
   const goToPage = (page: number) => {
@@ -106,7 +110,10 @@ export default function ProjectsPagination({
         </Button>
 
         {/* Current Page */}
-        <Button size="icon" className="aspect-square p-3 border rounded border-black/25 bg-transparent text-black">
+        <Button
+          size="icon"
+          className="aspect-square p-3 border rounded border-black/25 bg-transparent text-black"
+        >
           {currentPage}
         </Button>
 

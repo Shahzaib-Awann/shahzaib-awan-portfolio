@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import useDebounce from "@/lib/hooks/useDebounce";
 import { Cpu, Layers, Search, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 
 // Define the shape of the filter state
@@ -22,8 +22,9 @@ type QueryState = {
   technology: string;
 };
 
-const ProjectsFilter = ({ initialQuery }: { initialQuery: QueryState }) => {
+const ProjectsFilter = ({ technologies = [], initialQuery }: { technologies: { id: number, name: string }[], initialQuery: QueryState }) => {
   const router = useRouter();
+  const pathname = usePathname();
 
   // Initial state from URL
   const [query, setQuery] = useState<QueryState>({
@@ -44,9 +45,11 @@ const ProjectsFilter = ({ initialQuery }: { initialQuery: QueryState }) => {
     if (debouncedQuery.technology && debouncedQuery.technology !== "all")
       params.set("technology", debouncedQuery.technology);
 
-    const url = `/projects?${params.toString()}`;
-    router.replace(url);
-  }, [debouncedQuery, router]);
+    const query = params.toString();
+    const url = query ? `${pathname}?${query}` : pathname;
+
+    router.replace(url, { scroll: false });
+  }, [debouncedQuery, pathname, router]);
 
   // Clear all filters
   const clearFilters = useCallback(() => {
@@ -95,7 +98,7 @@ const ProjectsFilter = ({ initialQuery }: { initialQuery: QueryState }) => {
             </SelectTrigger>
             <SelectContent className="bg-card" position="popper">
               <SelectGroup>
-                <SelectItem value="all" >All Categories</SelectItem>
+                <SelectItem value="all">All Categories</SelectItem>
                 <SelectItem value="frontend">Frontend</SelectItem>
                 <SelectItem value="backend">Backend</SelectItem>
                 <SelectItem value="fullstack">Fullstack</SelectItem>
@@ -112,15 +115,19 @@ const ProjectsFilter = ({ initialQuery }: { initialQuery: QueryState }) => {
             onValueChange={(v) => setQuery({ ...query, technology: v })}
           >
             <SelectTrigger className="text-black text-xs! max-w-[] sm:text-base! border border-black/25 py-6 sm:py-7 px-4 sm:px-12 sm:pr-7 w-full overflow-hidden">
-              <SelectValue placeholder="All Technologies" className="truncate"/>
+              <SelectValue
+                placeholder="All Technologies"
+                className="truncate"
+              />
             </SelectTrigger>
             <SelectContent className="bg-card" position="popper">
               <SelectGroup>
                 <SelectItem value="all">All Technologies</SelectItem>
-                <SelectItem value="nextjs">Next.js</SelectItem>
-                <SelectItem value="reactjs">React.js</SelectItem>
-                <SelectItem value="react">React</SelectItem>
-                <SelectItem value="typescript">TypeScript</SelectItem>
+                {technologies.map((tech) => (
+        <SelectItem key={tech.id} value={tech.name}>
+          {tech.name}
+        </SelectItem>
+      ))}
               </SelectGroup>
             </SelectContent>
           </Select>

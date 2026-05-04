@@ -1,5 +1,8 @@
 import { SerializedEditorState } from "lexical";
 
+
+export type Categories = "frontend" | "backend" | "fullstack";
+
 // Project Interface (Landing Page)
 export interface ProjectInterface0 {
     id: string;
@@ -24,7 +27,7 @@ export interface ProjectInterface {
     shortSummary: string;
     fullDescription: string;
   
-    category: "frontend" | "backend" | "fullstack";
+    category: Categories;
   
     githubUrl: string | null;
     liveUrl: string | null;
@@ -81,7 +84,7 @@ export interface ProjectInterface {
     mainImageFileId: string;
     shortDescription: string;
     description: string;
-    category: "frontend" | "backend" | "fullstack"; // adjust if needed
+    category: Categories; // adjust if needed
     githubUrl: string;
     liveUrl: string;
     isFeatured: boolean;
@@ -106,7 +109,7 @@ export interface ProjectInterface {
     shortSummary: string;
     fullDescription: SerializedEditorState; // replace with your Lexical type if available
   
-    category: "frontend" | "backend" | "fullstack";
+    category: Categories;
   
     githubUrl: string | null;
     liveUrl: string | null;
@@ -126,3 +129,23 @@ export interface ProjectInterface {
     galleryImages: string[];
     technologies: string[];
   }
+
+  export interface ProjectsResponse<T> {
+    success: boolean;
+  
+    data: T;
+  
+    pagination: {
+      page: number;
+      pageSize: number;
+      totalItems: number;
+      totalPages: number;
+    };
+  
+    filters: {
+      search?: string;
+      category?: string;
+      technology?: string;
+      sortBy?: "latest" | "oldest";
+    };
+  };
